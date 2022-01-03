@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.inginf.dmml.voiceidnotesapp.controller.MyNotesController">
+   <content>
+      <AnchorPane prefHeight="498.0" prefWidth="398.0">
+         <children>
+            <Label layoutX="169.0" layoutY="25.0" text="Notes">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="newTitleTextField" layoutX="24.0" layoutY="65.0" prefHeight="26.0" prefWidth="350.0" promptText="Insert new title..." style="-fx-border-style: solid; -fx-background-color: lightyellow;">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+            </TextField>
+            <TextArea fx:id="newContentTextArea" layoutX="24.0" layoutY="99.0" prefHeight="79.0" prefWidth="350.0" promptText="Insert new note..." style="-fx-border-style: solid; -fx-control-inner-background: lightyellow;" wrapText="true" />
+            <Button fx:id="saveButton" layoutX="329.0" layoutY="185.0" mnemonicParsing="false" style="-fx-background-color: lightgreen;" text="Save" />
+            <TextField fx:id="searchTextField" layoutX="26.0" layoutY="223.0" prefHeight="26.0" prefWidth="284.0" promptText="Search title of your notes here..." />
+            <Button fx:id="searchButton" layoutX="317.0" layoutY="223.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="56.0" style="-fx-background-color: lightblue;" text="Search" />
+            <DatePicker fx:id="startDatePicker" layoutX="27.0" layoutY="249.0" prefHeight="26.0" prefWidth="145.0" promptText="Start date" />
+            <DatePicker fx:id="endDatePicker" layoutX="172.0" layoutY="249.0" prefHeight="26.0" prefWidth="137.0" promptText="End date" />
+            <VBox fx:id="notesVBox" layoutX="29.0" layoutY="293.0" prefHeight="205.0" prefWidth="344.0" />
+            <Label layoutX="90.0" layoutY="191.0" text="(title must be under 15 chars, no spaces allowed)" textFill="#7c7c7c">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

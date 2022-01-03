@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.inginf.dmml.voiceidnotesapp.controller.LoginPageController">
+   <children>
+      <Button fx:id="loginButton" layoutX="283.0" layoutY="428.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Login" />
+      <Button fx:id="registerButton" layoutX="64.0" layoutY="428.0" mnemonicParsing="false" style="-fx-background-color: lightgreen;" text="Register" />
+      <Button fx:id="recordButton" layoutX="168.0" layoutY="106.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="62.0">
+         <graphic>
+            <ImageView fitHeight="72.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/microphone-default.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Label layoutX="108.0" layoutY="50.0" text="VoiceIDNotes" textFill="#204dd3">
+         <font>
+            <Font name="Arial" size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="foundUsernameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="177.0" prefHeight="36.0" prefWidth="370.0" text="Hi ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="94.0" layoutY="243.0" text="Insert your PIN:" />
+      <PasswordField fx:id="pinTextField" layoutX="207.0" layoutY="239.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
+      <Label layoutX="86.0" layoutY="336.0" text="Insert username:" />
+      <TextField fx:id="usernameTextField" layoutX="206.0" layoutY="331.0" prefHeight="26.0" prefWidth="108.0" promptText="Lorenzo1" />
+      <Label layoutX="88.0" layoutY="379.0" text="Insert password:" />
+      <Label layoutX="191.0" layoutY="292.0" text="OR" />
+      <PasswordField fx:id="passwordTextField" layoutX="206.0" layoutY="374.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd1234" />
+   </children>
+</AnchorPane>

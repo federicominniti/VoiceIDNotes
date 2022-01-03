@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.inginf.dmml.voiceidnotesapp.controller.RegisterPageController">
+   <children>
+      <Button fx:id="recordButton" layoutX="144.0" layoutY="174.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="62.0">
+         <graphic>
+            <ImageView fitHeight="72.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/microphone-default.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Label layoutX="108.0" layoutY="50.0" text="VoiceIDNotes" textFill="#204dd3">
+         <font>
+            <Font name="Arial" size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="sentenceLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="100.0" maxWidth="1.7976931348623157E308" prefHeight="61.0" prefWidth="370.0" text="Click the record button to start the registration of your voice" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="registerButton" layoutX="283.0" layoutY="428.0" mnemonicParsing="false" style="-fx-background-color: lightgreen;" text="Register" />
+      <TextField fx:id="usernameTextField" layoutX="204.0" layoutY="257.0" prefHeight="26.0" prefWidth="108.0" promptText="Matteo1" />
+      <PasswordField fx:id="passwordField" layoutX="204.0" layoutY="336.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
+      <PasswordField fx:id="pinField" layoutX="201.0" layoutY="376.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
+      <Label layoutX="96.0" layoutY="262.0" text="Insert username:" />
+      <Label layoutX="87.0" layoutY="341.0" text="Repeat password:" />
+      <Label layoutX="89.0" layoutY="381.0" text="Choose your PIN:" />
+      <Button fx:id="cancelButton" layoutX="64.0" layoutY="428.0" mnemonicParsing="false" style="-fx-background-color: pink;" text="Cancel" />
+      <Label fx:id="countLabel" layoutX="229.0" layoutY="192.0" text="0 / 10">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="repeatPasswordField" layoutX="204.0" layoutY="297.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
+      <Label layoutX="96.0" layoutY="302.0" text="Insert password:" />
+   </children>
+</AnchorPane>
