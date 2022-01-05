@@ -1,13 +1,14 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Note {
     private String title;
     private String text;
-    private LocalDate creationDate;
+    private Date creationDate;
 
-    public Note(String title, String text, LocalDate creationDate) {
+    public Note(String title, String text, Date creationDate) {
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;
@@ -29,11 +30,11 @@ public class Note {
         this.text = text;
     }
 
-    public LocalDate getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 }

@@ -7,6 +7,8 @@ module it.unipi.dii.inginf.dmml.voiceidnotesapp {
     requires java.xml;
     requires java.desktop;
     requires com.opencsv;
+    requires leveldb;
+    requires leveldb.api;
 
     opens it.unipi.dii.inginf.dmml.voiceidnotesapp.config to xstream;
     opens it.unipi.dii.inginf.dmml.voiceidnotesapp.app to javafx.fxml;

@@ -1,5 +1,6 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.app;
 
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.persistence.LevelDBDriver;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,5 +28,7 @@ public class VoiceIDNotes extends Application {
         primaryStage.setTitle("VoiceIDNotes");
         primaryStage.show();
         primaryStage.setResizable(false);
+
+        LevelDBDriver.getInstance().registerUser("pino", "1", "1234");
     }
 }

@@ -3,6 +3,10 @@ package it.unipi.dii.inginf.dmml.voiceidnotesapp.controller;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.Classifier;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.FeatureExtractor;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.VoiceFeature;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Note;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Session;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.User;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.persistence.LevelDBDriver;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.VoiceRecorder;
 import javafx.application.Platform;
@@ -14,6 +18,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoginPageController {
@@ -62,7 +69,7 @@ public class LoginPageController {
         username = usernameTextField.getText();
         password = passwordTextField.getText();
 
-        if((pin.equals("") && login(username, password)) || (!pin.equals("") && login(usernameVoiceDetected, pin))) {
+        if((pin.equals("") && login(username, password, false)) || (!pin.equals("") && login(usernameVoiceDetected, pin, true))) {
             Utils.changeScene("/fxml/MyNotes.fxml", clickEvent);
         }else
         if(pin.equals("")) {
@@ -101,7 +108,17 @@ public class LoginPageController {
     }
 
     //DA LEVARE
-    boolean login(String a, String b){
-        return true;
+    boolean login(String username, String credential, boolean withPin){
+        LevelDBDriver dbInstance = LevelDBDriver.getInstance();
+        if (dbInstance.login(username, credential, withPin)) {
+            Session session = Session.getLocalSession();
+            User user = new User(username, 10);
+            List<Note> userNotes = dbInstance.getAllNotesOfUser(user);
+            session.setLoggedUser(user);
+            session.setUserNotes(userNotes);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

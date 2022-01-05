@@ -1,7 +1,9 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.controller;
 
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.Classifier;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.FeatureExtractor;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.VoiceFeature;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.persistence.LevelDBDriver;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.CSVManager;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.VoiceRecorder;
@@ -9,6 +11,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -124,7 +127,13 @@ public class RegisterPageController {
             Utils.showAlert("Error! Check password fields");
             return;
         }
-        CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
+        LevelDBDriver dbInstance = LevelDBDriver.getInstance();
+        if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
+            CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
+        } else {
+            Utils.showAlert("Error: username already present");
+        }
+
     }
 
     private VoiceFeature getRecordingFeatures() throws IOException {

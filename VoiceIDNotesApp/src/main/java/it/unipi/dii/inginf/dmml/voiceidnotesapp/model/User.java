@@ -13,6 +13,12 @@ public class User {
         this.countAudio = countAudio;
     }
 
+
+    public User(String username, int countAudio) {
+        this.username = username;
+        this.countAudio = countAudio;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

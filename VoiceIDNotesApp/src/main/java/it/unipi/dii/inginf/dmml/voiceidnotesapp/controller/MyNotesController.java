@@ -1,6 +1,8 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.controller;
 
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Note;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Session;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.persistence.LevelDBDriver;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,15 +13,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import weka.knowledgeflow.CallbackNotifierDelegate;
 
+import java.awt.event.FocusEvent;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 
 
 public class MyNotesController {
@@ -32,13 +37,14 @@ public class MyNotesController {
     @FXML private DatePicker endDatePicker;
     @FXML private VBox notesVBox;
 
-    private static final int MAX_TITLE_LENGTH = 15;
+    private static final int MAX_TITLE_LENGTH = 25;
 
     public void initialize(){
         saveButton.setOnMouseClicked(clickEvent -> saveNewNote(clickEvent));
         searchButton.setOnMouseClicked(clickEvent -> searchNote(clickEvent));
         newTitleTextField.addEventFilter(KeyEvent.KEY_TYPED, maxLength());
 
+        createSearchedNotesGUI(Session.getLocalSession().getUserNotes());
         //ROBA DB
         //ArrayList<Note> searchedNotes = searchByDatesInterval(LocalDate.parse("1-1-1980"), LocalDate.now());
     }
@@ -48,7 +54,7 @@ public class MyNotesController {
             @Override
             public void handle(KeyEvent keyEvent) {
                 TextField tx = (TextField) keyEvent.getSource();
-                if (tx.getText().length() >= MAX_TITLE_LENGTH || keyEvent.getCharacter().equals(" ")) {
+                if (tx.getText().length() >= MAX_TITLE_LENGTH) {
                     keyEvent.consume();
                 }
             }
@@ -70,6 +76,9 @@ public class MyNotesController {
                 Optional <ButtonType> option = alert.showAndWait();
 
                 if (option.get() == ButtonType.OK) {
+                    LevelDBDriver dbInstance = LevelDBDriver.getInstance();
+                    dbInstance.deleteNote(toBeDeleted, Session.getLocalSession().getLoggedUser());
+                    Session.getLocalSession().getUserNotes().remove(toBeDeleted);
                     notesVBox.getChildren().remove(container);
                     //deleteNote();
                 }
@@ -83,15 +92,17 @@ public class MyNotesController {
         //AGGIUNTA AL DB
         if(!title.equals("") && !content.equals("")) {
             //PROVA AD AGGIUNGERE
-                Note newNote = new Note(title, content, LocalDate.now());
-                ArrayList<Note> arrayList = new ArrayList<>();
-                arrayList.add(newNote);
-                createSearchedNotesGUI(arrayList);
+            Note newNote = new Note(title, content, new Date());
+            LevelDBDriver driver = LevelDBDriver.getInstance();
+            driver.addNote(newNote, Session.getLocalSession().getLoggedUser());
+            Session.getLocalSession().getUserNotes().add(newNote);
+            notesVBox.getChildren().clear();
+            createSearchedNotesGUI(Session.getLocalSession().getUserNotes());
             //SE AGGIUNTA NON VA A BUON FINE
-                //Utils.showAlert("Problem with connecting with db.. Try again");
+            //Utils.showAlert("Problem with connecting with db.. Try again");
             //ELSE
-                newTitleTextField.setText("");
-                newContentTextArea.setText("");
+            newTitleTextField.setText("");
+            newContentTextArea.setText("");
         } else{
             Utils.showAlert("Empty note");
         }
@@ -99,23 +110,53 @@ public class MyNotesController {
 
     private void searchNote(MouseEvent clickEvent){
         String searchedTitle = searchTextField.getText();
-        LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
-        if(searchedTitle.equals("") && (startDate == null || endDate == null)){
+        LocalDate startDateLocal = startDatePicker.getValue();
+        LocalDate endDateLocal = endDatePicker.getValue();
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date startDate = null;
+        Date endDate = null;
+        if(startDateLocal != null && endDateLocal != null) {
+            startDate = Date.from(startDateLocal.atStartOfDay(defaultZoneId).toInstant());
+            endDate = Date.from(endDateLocal.atStartOfDay(defaultZoneId).toInstant());
+        }
+
+        if((startDateLocal == null && endDateLocal != null) || (startDateLocal != null && endDateLocal == null)){
             Utils.showAlert("Please insert search parameters!");
             return;
         }
 
-        ArrayList<Note> searchedNotes;
+        List<Note> searchedNotes;
 
-        if(!searchedTitle.equals("") && startDate != null && endDate != null){
-            //searchedNotes = searchByTitleInDatesInterval(searchedTitle, startDate, endDate);
-        } else if(!searchedTitle.equals("")){
-            //searchedNotes = searchByTitle(title);
-        } else if(startDate != null && endDate != null){
-            //searchedNotes = searchByDatesInterval(startDate, endDate);
+        List<Note> userNotes;
+        userNotes = Session.getLocalSession().getUserNotes();
+        searchedNotes = new ArrayList<>();
+        for (int i = 0; i < userNotes.size(); i++) {
+            if (!searchedTitle.equals("") && startDate != null && endDate != null) {
+                if (userNotes.get(i).getTitle().contains(searchedTitle)
+                        && startDate.before(userNotes.get(i).getCreationDate())
+                        && endDate.after(userNotes.get(i).getCreationDate()))
+
+                    searchedNotes.add(userNotes.get(i));
+            } else if (!searchedTitle.equals("")) {
+                if (userNotes.get(i).getTitle().contains(searchedTitle))
+                    searchedNotes.add(userNotes.get(i));
+            } else if (startDate != null && endDate != null) {
+                if (startDate.before(userNotes.get(i).getCreationDate())
+                        && endDate.after(userNotes.get(i).getCreationDate()))
+
+                    searchedNotes.add(userNotes.get(i));
+            }
         }
-        //createSearchedNotesGUI(searchedNotes);
+
+        if(searchedTitle.equals("") && startDateLocal == null && endDateLocal == null) {
+            searchedNotes = Session.getLocalSession().getUserNotes();
+        }
+
+        notesVBox.getChildren().clear();
+        createSearchedNotesGUI(searchedNotes);
+        searchTextField.setText("");
+        startDatePicker.setValue(null);
+        endDatePicker.setValue(null);
     }
 
     private int getNumbersOfTextRow(Note searchedNote){
@@ -129,7 +170,7 @@ public class MyNotesController {
         return numRow;
     }
 
-    private void createSearchedNotesGUI(ArrayList<Note> searchedNotes){
+    private void createSearchedNotesGUI(List<Note> searchedNotes){
         for(int i = 0; i<searchedNotes.size(); i++){
             //AnchorPane anchorPane = new AnchorPane();
             //anchorPane.setPrefWidth(344);
@@ -171,6 +212,7 @@ public class MyNotesController {
             contentTextArea.setWrapText(true);
             contentTextArea.setStyle("-fx-vbar-policy: never");
 
+
             int numRow = getNumbersOfTextRow(searchedNotes.get(i));
             contentTextArea.setPrefRowCount(numRow);
             contentTextArea.setMinHeight(numRow*17 + 10);
@@ -178,14 +220,33 @@ public class MyNotesController {
             //anchorPane.setPrefHeight(60 + 8);
             noteVBox.getChildren().add(contentTextArea);
 
-            Label creationDate = new Label("Creation date: " + searchedNotes.get(i).getCreationDate().toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Label creationDate = new Label("Creation date: " + dateFormat.format(searchedNotes.get(i).getCreationDate()));
             //creationDate.setLayoutX(205);
             creationDate.setLayoutY(contentTextArea.getLayoutY() + contentTextArea.getPrefHeight() + 8);
             creationDate.setTextFill(Paint.valueOf("#5b5959"));
             creationDate.setFont(Font.font(12));
-            creationDate.setPrefWidth(344);
-            creationDate.setAlignment(Pos.CENTER_RIGHT);
-            noteVBox.getChildren().add(creationDate);
+            //creationDate.setPrefWidth(344);
+
+            /*Image update = new Image(String.valueOf(MyNotesController.class.getResource("/img/update.png")));
+            ImageView updateContainer = new ImageView(update);
+            updateContainer.setFitWidth(26);
+            updateContainer.setFitHeight(24);
+            //trashBinContainer.setLayoutX(324);
+            //trashBinContainer.setLayoutY(8);
+            updateContainer.setPickOnBounds(true);
+            updateContainer.setPreserveRatio(true);
+            updateContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, updateNoteHandler(searchedNotes.get(i)), noteVBox);
+            */
+            BorderPane footer = new BorderPane();
+            footer.setPrefWidth(344);
+            footer.setLeft(creationDate);
+            contentTextArea.addEventHandler(MouseEvent.MOUSE_CLICKED, showUpdateButton(searchedNotes.get(i), footer, contentTextArea));
+
+            //footer.setRight(updateContainer);
+            //creationDate.setAlignment(Pos.CENTER_RIGHT);
+            //noteVBox.getChildren().add(creationDate);
+            noteVBox.getChildren().add(footer);
 
 
             /*anchorPane.getChildren().add(titleLabel);
@@ -198,4 +259,37 @@ public class MyNotesController {
             notesVBox.getChildren().add(noteVBox);
         }
     }
+
+
+    private EventHandler<MouseEvent> showUpdateButton(Note toBeModified, BorderPane footer, TextArea contentTextArea) {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Image update = new Image(String.valueOf(MyNotesController.class.getResource("/img/update.png")));
+                ImageView updateContainer = new ImageView(update);
+                updateContainer.setFitWidth(26);
+                updateContainer.setFitHeight(24);
+                //trashBinContainer.setLayoutX(324);
+                //trashBinContainer.setLayoutY(8);
+                updateContainer.setPickOnBounds(true);
+                updateContainer.setPreserveRatio(true);
+                updateContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, updateNoteHandler(toBeModified, footer, contentTextArea));
+                footer.setRight(updateContainer);
+            }
+        };
+    }
+
+    private EventHandler<MouseEvent> updateNoteHandler(Note toBeModified, BorderPane footer, TextArea contentTextArea) {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                List<Note> notes = Session.getLocalSession().getUserNotes();
+                notes.get(notes.indexOf(toBeModified)).setText(contentTextArea.getText());
+                toBeModified.setText(contentTextArea.getText());
+                LevelDBDriver.getInstance().updateNote(toBeModified, Session.getLocalSession().getLoggedUser());
+                footer.setRight(null);
+            }
+        };
+    }
+
 }
