@@ -1,5 +1,6 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.classification;
 
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -51,7 +52,7 @@ public class VoiceFeature {
     public Instances toInstance() {
         Instances instanceDataset = null;
         try {
-            instanceDataset = Utils.loadDataset("MFCCExtractor/data.csv");
+            instanceDataset = Utils.loadDataset(Config.getInstance().getDatasetPath());
             double[] attributesValues = new double[NUMBER_MFCC_DELTA_DELTADELTA * 3 + 1];
             for (int i = 0; i < NUMBER_MFCC_DELTA_DELTADELTA; i++) {
                 attributesValues[i] = mfcc[i];

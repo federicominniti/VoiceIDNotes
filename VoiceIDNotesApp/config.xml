@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config>
+    <voiceExtractionServerIP>localhost</voiceExtractionServerIP>
+    <voiceExtractionServerPort>5001</voiceExtractionServerPort>
+    <datasetPath>data.csv</datasetPath>
+</it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config>

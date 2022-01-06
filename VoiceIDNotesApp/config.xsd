@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="voiceExtractionServerIP" type="xs:string"/>
+                <xs:element name="voiceExtractionServerPort" type="xs:string"/>
+                <xs:element name="datasetPath" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

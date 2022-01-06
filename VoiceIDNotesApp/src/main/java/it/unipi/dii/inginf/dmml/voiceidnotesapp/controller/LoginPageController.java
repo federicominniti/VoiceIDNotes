@@ -7,6 +7,7 @@ import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Note;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.Session;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.model.User;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.persistence.LevelDBDriver;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.CSVManager;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.VoiceRecorder;
 import javafx.application.Platform;
@@ -31,12 +32,17 @@ public class LoginPageController {
     @FXML private PasswordField passwordTextField;
     @FXML private Button loginButton;
     @FXML private Button registerButton;
+    @FXML private Label sentenceLabel;
+
+    private VoiceFeature lastFeatureExtracted;
 
     public void initialize(){
         recordButton.setOnMouseClicked(clickEvent -> startRecording(clickEvent));
         loginButton.setOnMouseClicked(clickEvent -> loginHandler(clickEvent));
         registerButton.setOnMouseClicked(clickEvent -> registrationHandler(clickEvent));
-        //ROBA DB
+
+        int extracted = (int) (Math.random()*20);
+        sentenceLabel.setText(Utils.sentences[extracted]);
     }
 
     private void startRecording(MouseEvent clickEvent) {
@@ -93,13 +99,13 @@ public class LoginPageController {
     private void getVoiceLabel() throws IOException {
         FeatureExtractor voiceFeatureExtractor = new FeatureExtractor();
 
-        VoiceFeature voiceFeature = voiceFeatureExtractor.getVoiceFeature(VoiceRecorder.AUDIO_PATH);
+        lastFeatureExtracted = voiceFeatureExtractor.getVoiceFeature(VoiceRecorder.AUDIO_PATH);
 
-        if(voiceFeature.getMfcc().length != 0 && voiceFeature.getDelta().length != 0
-                && voiceFeature.getDeltadelta().length != 0) {
+        if(lastFeatureExtracted.getMfcc().length != 0 && lastFeatureExtracted.getDelta().length != 0
+                && lastFeatureExtracted.getDeltadelta().length != 0) {
 
             Classifier voiceClassifier = Classifier.getClassifierInstance(false);
-            String recognisedUsername = voiceClassifier.classify(voiceFeature.toInstance());
+            String recognisedUsername = voiceClassifier.classify(lastFeatureExtracted.toInstance());
             foundUsernameLabel.setText("Hi " + recognisedUsername);
 
         } else{
@@ -110,12 +116,26 @@ public class LoginPageController {
     //DA LEVARE
     boolean login(String username, String credential, boolean withPin){
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
-        if (dbInstance.login(username, credential, withPin)) {
+        User loggedUser;
+        if ((loggedUser = dbInstance.login(username, credential, withPin)) != null) {
             Session session = Session.getLocalSession();
-            User user = new User(username, 10);
-            List<Note> userNotes = dbInstance.getAllNotesOfUser(user);
-            session.setLoggedUser(user);
+            List<Note> userNotes = dbInstance.getAllNotesOfUser(loggedUser);
+            session.setLoggedUser(loggedUser);
             session.setUserNotes(userNotes);
+
+            if(withPin && loggedUser.getCountAudio() < 100) {
+                loggedUser.setCountAudio(loggedUser.getCountAudio() + 1);
+                dbInstance.updateCount(loggedUser);
+                ArrayList<VoiceFeature> singleList = new ArrayList<>();
+                singleList.add(lastFeatureExtracted);
+                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
+            } else if(withPin && loggedUser.getCountAudio() >= 100) {
+                CSVManager.removeFirstInCSV(loggedUser.getUsername());
+                ArrayList<VoiceFeature> singleList = new ArrayList<>();
+                singleList.add(lastFeatureExtracted);
+                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
+            }
+
             return true;
         } else {
             return false;

@@ -34,29 +34,6 @@ public class RegisterPageController {
     private ArrayList<VoiceFeature> extractedFeatures;
     private int countRecordings;
 
-    private static final String[] sentences = {
-            "His family relocated to Indiana when he was a boy. He married Eliza Jane Sumner in 1851",
-            "The following year the couple, with Ezra's brother and with their newborn son, set out for the Oregon where land could be claimed and settled on",
-            "He became convinced that the Oregon was being forgotten, and he determined to bring it publicity so it could be marked and monuments erected",
-            "The Summers lived about four miles from Indianapolis, and like the Martins were family farmers who did not hire help",
-            "They encountered Native Americans, who would sometimes demand provisions for passage, but none were given and none of the incidents ended with violence",
-            "Despite being a source of food, the bison were a danger as their stampedes could destroy property and kill irreplaceable stock",
-            "The fertile soil and temperate climate of the valley proved ideal for hops. Not only did the plants thrive, farmers were able to obtain four or five times the usual yield",
-            "Martin strove to improve life in the region, and donated land and money towards town buildings and parks, a theatre and a hotel.",
-            "London’s underground subway system is very efficient and easy to use, even though the city is large and bustling.",
-            "Although I drank a lot of coffee, I'm getting sleepy, and I don't think I'll make it through the movie.",
-            "Even though the nebula could harm our ship, we must push through it: the alien refugees need our help!",
-            "I’d like to visit Quebec, but because I don’t speak French, I’ll have to start learning.",
-            "Despite his inability to raise funds for mining, Martin was certain there was a way to make money from the gold rush",
-            "Meeker returned to the Yukon twice more, in 1899 and 1900. Most of the money earned through groceries was invested in gold mining, and was lost.",
-            "Jim doesn’t drink beer because he has a gluten allergy, so he tends to drink wine most weekends.",
-            "They sat in a heavy flat-bottomed boat, each holding a long, crooked rod in his hands and eagerly waiting for a bite",
-            "As proud as she was of Jonathan, it was Alex who stayed on her mind for a long time after the phone call.",
-            "He walked around to the driver's side, ducking his head as he folded his long frame into the car.",
-            "I keep telling him that as long as he gives her money, she'll never get out of trouble, but he just says she's the only sister he has and he has the money.",
-            "The scents of what looked like pizza night taunted her, and she stood peering through the cracked door at the long dinner table."
-    };
-
     public void initialize(){
         countRecordings = 0;
         alreadyExtractedNums = new ArrayList<>();
@@ -79,7 +56,7 @@ public class RegisterPageController {
         } while (alreadyExtractedNums.contains(extracted));
 
         alreadyExtractedNums.add(extracted);
-        sentenceLabel.setText(sentences[extracted]);
+        sentenceLabel.setText(Utils.sentences[extracted]);
         countLabel.setText(countRecordings + "/10");
         disableRegisterPageButtons(true);
         Utils.switchImage(recordButton, Utils.START_RECORDING_IMAGE);
@@ -97,7 +74,7 @@ public class RegisterPageController {
                             return;
                         }
                         extractedFeatures.add(getRecordingFeatures());
-                        if (countRecordings == 2) {
+                        if (countRecordings == 10) {
                             recordButton.setDisable(true);
                             countLabel.setTextFill(Color.GREEN);
                         }
@@ -130,6 +107,7 @@ public class RegisterPageController {
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
         if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
             CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
+            Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
         } else {
             Utils.showAlert("Error: username already present");
         }

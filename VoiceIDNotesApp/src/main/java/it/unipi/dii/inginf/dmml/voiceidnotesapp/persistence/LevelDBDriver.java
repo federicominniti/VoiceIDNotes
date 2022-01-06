@@ -98,21 +98,24 @@ public class LevelDBDriver {
         delete(buildKey + "text");
     }
 
-    public boolean login(String username, String credential, boolean withPin) {
-        if (withPin) {
-            String buildKey = "user:" + username + ":" + "pin";
-            String pin = get(buildKey);
-            if (pin.equals(credential))
-                return true;
-            return false;
-        } else {
-            String buildKey = "user:" + username + ":" + "password";
-            String password = get(buildKey);
-            if (password.equals(credential))
-                return true;
-            return false;
-        }
+    public User login(String username, String credential, boolean withPin) {
+        String buildKey = "user:" + username + ":";
+        String countAudio = get(buildKey + "countaudio");
+        String pin = get(buildKey + "pin");
+        String password = get(buildKey + "password");
+        if (withPin && pin.equals(credential)) {
+            return (new User(username, Integer.parseInt(countAudio)));
+        } else if (password.equals(credential)) {
+            return (new User(username, Integer.parseInt(countAudio)));
+        } else
+            return null;
     }
+
+    public void updateCount(User user){
+        String buildString = "user:" + user.getUsername() + ":countaudio";
+        put(buildString, String.valueOf(user.getCountAudio()));
+    }
+
 /*
     public List<Note> getAllNotesOfUser(User user) {
         String buildKey = "note:" + user.getUsername();
