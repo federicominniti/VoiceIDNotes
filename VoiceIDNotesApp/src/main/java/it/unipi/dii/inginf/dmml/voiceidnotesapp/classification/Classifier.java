@@ -8,11 +8,14 @@ import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVSaver;
+import weka.core.converters.ConverterUtils;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemoveDuplicates;
+import weka.filters.supervised.instance.SMOTE;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,13 +117,22 @@ public class Classifier {
     }
 
     public void oversampleNewVoices() {
-        weka.filters.supervised.instance.SMOTE smote = new weka.filters.supervised.instance.SMOTE();
+        SMOTE smote = new SMOTE();
         try {
-            Instances voices = Utils.loadDataset(Utils.REGISTERED_DATASET_PATH);
+            ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(Utils.REGISTERED_DATASET_PATH);
+            Instances voices = dataSource.getDataSet();
+            voices.setClassIndex(voices.numAttributes()-1);
             smote.setInputFormat(voices);
             smote.setPercentage(900);
             smote.setClassValue("last");
+            System.out.println("prima:" + voices.numInstances());
             Instances voices_smoted = Filter.useFilter(voices, smote);
+            System.out.println("dopo:" + voices_smoted.numInstances());
+            voices_smoted.setClassIndex(voices_smoted.numAttributes()-1);
+            File file = new File(Utils.REGISTERED_DATASET_PATH);
+            if (file.delete()) {
+                System.out.println("eliminato");
+            }
             CSVSaver saver = new CSVSaver();
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));

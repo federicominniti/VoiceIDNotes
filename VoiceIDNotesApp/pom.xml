@@ -30,6 +30,13 @@
             <version>17.0.2-ea+1</version>
             <type>pom</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka.thirdparty/bounce -->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka.thirdparty</groupId>
+            <artifactId>bounce</artifactId>
+            <version>0.18</version>
+        </dependency>
+
 
 
 
@@ -89,16 +96,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
             <version>17.0.2-ea+1</version>
-        </dependency>
-        <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-dev</artifactId>
-            <version>3.9.5</version>
-        </dependency>
-        <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>SMOTE</artifactId>
-            <version>1.0.3</version>
         </dependency>
     </dependencies>
 

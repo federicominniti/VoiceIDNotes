@@ -12,8 +12,18 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/weka-smote.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.4.0-b180830.0359" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka.thirdparty:bounce:0.18" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:17.0.2-ea+1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac-aarch64:17.0.2-ea+1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:17.0.2-ea+1" level="project" />
@@ -44,35 +54,8 @@
     <orderEntry type="library" name="Maven: org.glassfish.jaxb:jaxb-runtime:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jaxb:jaxb-core:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jaxb:txw2:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:4.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:17.0.2-ea+1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac-aarch64:17.0.2-ea+1" level="project" />
-    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka:weka-dev:3.9.5" level="project" />
-    <orderEntry type="library" name="Maven: com.github.vbmacher:java-cup:11b-20160615" level="project" />
-    <orderEntry type="library" name="Maven: com.github.vbmacher:java-cup-runtime:11b-20160615" level="project" />
-    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka.thirdparty:bounce:0.18" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.matrix-toolkits-java:mtj:1.0.4" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:native_ref-java:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil:jniloader:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:native_system-java:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1" level="project" />
-    <orderEntry type="library" name="Maven: net.sourceforge.f2j:arpack_combined_all:0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.netlib-java:netlib-java:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:core:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fracpete:jfilechooser-bookmarks:0.1.6" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fracpete:jclipboardhelper:0.1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:3.0.11" level="project" />
-    <orderEntry type="library" name="Maven: jakarta.activation:jakarta.activation-api:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka:SMOTE:1.0.3" level="project" />
   </component>
 </module>

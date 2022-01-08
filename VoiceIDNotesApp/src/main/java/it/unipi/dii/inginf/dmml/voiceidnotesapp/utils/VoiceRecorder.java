@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class VoiceRecorder {
-    public static final String AUDIO_PATH = "./temp/VoiceAudio.wav";
+    public static final String AUDIO_PATH = "temp/VoiceAudio.wav";
     // Record duration, in milliseconds
     public static final long RECORD_TIME = 6000;
 

@@ -8,8 +8,7 @@ module it.unipi.dii.inginf.dmml.voiceidnotesapp {
     requires com.opencsv;
     requires leveldb;
     requires leveldb.api;
-    requires weka.dev;
-    requires SMOTE;
+    requires weka.smote;
 
     opens it.unipi.dii.inginf.dmml.voiceidnotesapp.config to xstream;
     opens it.unipi.dii.inginf.dmml.voiceidnotesapp.app to javafx.fxml;
