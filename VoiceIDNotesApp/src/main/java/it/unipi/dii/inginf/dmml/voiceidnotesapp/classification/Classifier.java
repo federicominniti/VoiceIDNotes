@@ -8,11 +8,13 @@ import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
+import weka.core.converters.CSVSaver;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemoveDuplicates;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Classifier {
@@ -109,5 +111,22 @@ public class Classifier {
             e.printStackTrace();
         }
         return label;
+    }
+
+    public void oversampleNewVoices() {
+        weka.filters.supervised.instance.SMOTE smote = new weka.filters.supervised.instance.SMOTE();
+        try {
+            Instances voices = Utils.loadDataset(Utils.REGISTERED_DATASET_PATH);
+            smote.setInputFormat(voices);
+            smote.setPercentage(900);
+            smote.setClassValue("last");
+            Instances voices_smoted = Filter.useFilter(voices, smote);
+            CSVSaver saver = new CSVSaver();
+            saver.setInstances(voices_smoted);
+            saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
+            saver.writeBatch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

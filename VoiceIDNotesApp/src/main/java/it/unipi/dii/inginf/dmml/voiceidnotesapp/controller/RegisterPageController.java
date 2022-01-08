@@ -107,6 +107,11 @@ public class RegisterPageController {
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
         if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
             CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
+            try {
+                Classifier.getClassifierInstance(false).oversampleNewVoices();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
         } else {
             Utils.showAlert("Error: username already present");
