@@ -14,7 +14,7 @@
    <content>
       <AnchorPane prefHeight="498.0" prefWidth="398.0">
          <children>
-            <Label layoutX="169.0" layoutY="25.0" text="Notes">
+            <Label layoutX="26.0" layoutY="26.0" text="Notes">
                <font>
                   <Font size="24.0" />
                </font>
@@ -36,6 +36,7 @@
                   <Font size="11.0" />
                </font>
             </Label>
+            <Button fx:id="profileButton" layoutX="318.0" layoutY="28.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Profile" />
          </children>
       </AnchorPane>
    </content>

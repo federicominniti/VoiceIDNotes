@@ -60,7 +60,27 @@ public class CSVManager {
             allElements.remove(index);
             FileWriter fileWriter = new FileWriter(Utils.REGISTERED_DATASET_PATH);
             CSVWriter writer = new CSVWriter(fileWriter);
-            writer.writeAll(allElements);
+            for(int i = 0; i<allElements.size(); i++)
+                writer.writeNext(allElements.get(i), false);
+            writer.close();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void mergeCSV(){
+        try {
+            CSVReader registeredData = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
+            CSVReader data = new CSVReader(new FileReader(Config.getInstance().getDatasetPath()));
+            List<String[]> allElements = data.readAll();
+            List<String[]> registeredList = registeredData.readAll();
+            registeredList.remove(0);
+            allElements.addAll(registeredList);
+
+            FileWriter fileWriter = new FileWriter("temp/mergedDataset.csv");
+            CSVWriter writer = new CSVWriter(fileWriter);
+            for(int i = 0; i<allElements.size(); i++)
+                writer.writeNext(allElements.get(i), false);
             writer.close();
         } catch (IOException | CsvException e) {
             e.printStackTrace();

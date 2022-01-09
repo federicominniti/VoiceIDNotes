@@ -11,16 +11,20 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Utils {
     public final static String START_RECORDING_IMAGE = "/img/voice-recording.png";
     public final static String END_RECORDING_IMAGE = "/img/microphone-default.png";
     public final static String REGISTERED_DATASET_PATH = "registeredUser.csv";
+    public final static String MERGED_DATSET = "temp/mergedDataset.csv";
     public static final String[] sentences = {
             "His family relocated to Indiana when he was a boy. He married Eliza Jane Sumner in 1851",
             "The following year the couple, with Ezra's brother and with their newborn son, set out for the Oregon where land could be claimed and settled on",
@@ -109,14 +113,23 @@ public class Utils {
     }
 
     public static Instances loadDataset(String datasetPath) throws Exception {
-        ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
+        /*ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
         Instances dataset = dataSource.getDataSet();
+        //dataset.setClassIndex(dataset.numAttributes() - 1);
+        dataset.setClassIndex(dataset.numAttributes() - 1);
         File registeredFile = new File(REGISTERED_DATASET_PATH);
         if(registeredFile.exists()) {
             ConverterUtils.DataSource registeredDataSource = new ConverterUtils.DataSource(REGISTERED_DATASET_PATH);
-            dataset.addAll(registeredDataSource.getDataSet());
+            Instances registeredData = registeredDataSource.getDataSet();
+            registeredData.setClassIndex(registeredData.numAttributes() - 1);
+
+            megedDataset.setClassIndex(dataset.numAttributes() - 1);
             //System.out.println(dataset.checkInstance(registeredDataSource.getDataSet().instance(10)));
-        }
+            return megedDataset;
+        }*/
+        CSVManager.mergeCSV();
+        ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
+        Instances dataset = dataSource.getDataSet();
         dataset.setClassIndex(dataset.numAttributes() - 1);
         return dataset;
     }

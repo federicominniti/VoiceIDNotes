@@ -43,6 +43,7 @@ public class LoginPageController {
 
         int extracted = (int) (Math.random()*20);
         sentenceLabel.setText(Utils.sentences[extracted]);
+        lastFeatureExtracted = null;
     }
 
     private void startRecording(MouseEvent clickEvent) {
@@ -123,7 +124,14 @@ public class LoginPageController {
             session.setLoggedUser(loggedUser);
             session.setUserNotes(userNotes);
 
-            if(withPin && loggedUser.getCountAudio() < 100) {
+            if(lastFeatureExtracted != null) {
+                CSVManager.removeFirstInCSV(loggedUser.getUsername());
+                ArrayList<VoiceFeature> singleList = new ArrayList<>();
+                singleList.add(lastFeatureExtracted);
+                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
+            }
+
+            /*if(withPin && loggedUser.getCountAudio() < 100) {
                 loggedUser.setCountAudio(loggedUser.getCountAudio() + 1);
                 dbInstance.updateCount(loggedUser);
                 ArrayList<VoiceFeature> singleList = new ArrayList<>();
@@ -134,7 +142,8 @@ public class LoginPageController {
                 ArrayList<VoiceFeature> singleList = new ArrayList<>();
                 singleList.add(lastFeatureExtracted);
                 CSVManager.appendToCSV(singleList, loggedUser.getUsername());
-            }
+            }*/
+
 
             return true;
         } else {

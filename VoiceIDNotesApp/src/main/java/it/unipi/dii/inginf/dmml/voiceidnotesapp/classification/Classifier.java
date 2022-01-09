@@ -8,7 +8,6 @@ import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
-import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVSaver;
 import weka.core.converters.ConverterUtils;
 import weka.filters.Filter;
@@ -44,7 +43,7 @@ public class Classifier {
     private Standardize buildStandardizeFilter() {
         Standardize filter = new Standardize();
         try {
-            Instances tuples = Utils.loadDataset(Config.getInstance().getDatasetPath());
+            Instances tuples = Utils.loadDataset(Utils.MERGED_DATSET);
             Instances noDuplicates = removeDuplicates(tuples);
             filter.setInputFormat(noDuplicates);
         } catch (Exception e) {
@@ -56,7 +55,7 @@ public class Classifier {
     private AttributeSelection createAttributeSelectionFilter(){
         AttributeSelection filter = new AttributeSelection();
         try {
-            Instances dataset = Utils.loadDataset(Config.getInstance().getDatasetPath());
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
             Instances modifiedDataset = removeDuplicates(dataset);
             CfsSubsetEval eval = new CfsSubsetEval();
             BestFirst search = new BestFirst();
@@ -72,7 +71,7 @@ public class Classifier {
     private RandomForest createRandomForestClassifier(){
         RandomForest localRFClassifier = null;
         try {
-            Instances dataset = Utils.loadDataset(Config.getInstance().getDatasetPath());
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
             Instances modifiedDataset = removeDuplicates(dataset);
             modifiedDataset = standardize(modifiedDataset);
             modifiedDataset = selectAttributes(modifiedDataset);
@@ -107,7 +106,7 @@ public class Classifier {
         try{
             Instances filteredInstances = standardize(instanceToClassify);
             filteredInstances = selectAttributes(filteredInstances);
-            Instances dataset = Utils.loadDataset(Config.getInstance().getDatasetPath());
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
             double index = randomForestClassifier.classifyInstance(filteredInstances.firstInstance());
             label = dataset.classAttribute().value((int) index);
         } catch (Exception e){
@@ -117,26 +116,24 @@ public class Classifier {
     }
 
     public void oversampleNewVoices() {
-        SMOTE smote = new SMOTE();
         try {
+            SMOTE smote = new SMOTE();
             ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(Utils.REGISTERED_DATASET_PATH);
             Instances voices = dataSource.getDataSet();
             voices.setClassIndex(voices.numAttributes()-1);
             smote.setInputFormat(voices);
             smote.setPercentage(900);
             smote.setClassValue("last");
-            System.out.println("prima:" + voices.numInstances());
             Instances voices_smoted = Filter.useFilter(voices, smote);
-            System.out.println("dopo:" + voices_smoted.numInstances());
-            voices_smoted.setClassIndex(voices_smoted.numAttributes()-1);
-            File file = new File(Utils.REGISTERED_DATASET_PATH);
+            /*File file = new File(Utils.REGISTERED_DATASET_PATH);
             if (file.delete()) {
                 System.out.println("eliminato");
-            }
+            }*/
             CSVSaver saver = new CSVSaver();
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
             saver.writeBatch();
+            Classifier.getClassifierInstance(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -100,21 +100,21 @@ public class LevelDBDriver {
 
     public User login(String username, String credential, boolean withPin) {
         String buildKey = "user:" + username + ":";
-        String countAudio = get(buildKey + "countaudio");
+        //String countAudio = get(buildKey + "countaudio");
         String pin = get(buildKey + "pin");
         String password = get(buildKey + "password");
         if (withPin && pin.equals(credential)) {
-            return (new User(username, Integer.parseInt(countAudio)));
+            return (new User(username, password, pin));
         } else if (password.equals(credential)) {
-            return (new User(username, Integer.parseInt(countAudio)));
+            return (new User(username, password, pin));
         } else
             return null;
     }
 
-    public void updateCount(User user){
+    /*public void updateCount(User user){
         String buildString = "user:" + user.getUsername() + ":countaudio";
         put(buildString, String.valueOf(user.getCountAudio()));
-    }
+    }*/
 
 /*
     public List<Note> getAllNotesOfUser(User user) {
@@ -194,6 +194,16 @@ public class LevelDBDriver {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         buildKey += simpleDateFormat.format(modifiedNote.getCreationDate()) + ":text";
         put(buildKey, modifiedNote.getText());
+    }
+
+    public void changePin(User user){
+        String buildKey = "user:" + user.getUsername() + ":pin";
+        put(buildKey, user.getPin());
+    }
+
+    public void changePassword(User user){
+        String buildKey = "user:" + user.getUsername() + ":password";
+        put(buildKey, user.getPassword());
     }
 
 }

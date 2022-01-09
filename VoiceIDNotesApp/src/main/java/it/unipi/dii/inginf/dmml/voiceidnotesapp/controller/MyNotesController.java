@@ -36,6 +36,7 @@ public class MyNotesController {
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private VBox notesVBox;
+    @FXML private Button profileButton;
 
     private static final int MAX_TITLE_LENGTH = 25;
 
@@ -43,10 +44,15 @@ public class MyNotesController {
         saveButton.setOnMouseClicked(clickEvent -> saveNewNote(clickEvent));
         searchButton.setOnMouseClicked(clickEvent -> searchNote(clickEvent));
         newTitleTextField.addEventFilter(KeyEvent.KEY_TYPED, maxLength());
+        profileButton.setOnMouseClicked(clickEvent -> myProfile(clickEvent));
 
         createSearchedNotesGUI(Session.getLocalSession().getUserNotes());
         //ROBA DB
         //ArrayList<Note> searchedNotes = searchByDatesInterval(LocalDate.parse("1-1-1980"), LocalDate.now());
+    }
+
+    private void myProfile(MouseEvent clickEvent) {
+        Utils.changeScene("/fxml/Profile.fxml", clickEvent);
     }
 
     private EventHandler<KeyEvent> maxLength() {
