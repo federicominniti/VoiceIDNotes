@@ -47,4 +47,5 @@ def show_dataset():
 
 
 if __name__ == '__main__':
-    Server.start_server()
+    # Server.start_server()
+    create_mfcc_dataset()
