@@ -1,12 +1,9 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.classification;
 
-//CLASSE DA MODIFICARE IN BASE AL CLASSIFICATORE SCELTO
-
-import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
-import weka.attributeSelection.BestFirst;
-import weka.attributeSelection.CfsSubsetEval;
-import weka.classifiers.trees.RandomForest;
+import weka.attributeSelection.CorrelationAttributeEval;
+import weka.attributeSelection.Ranker;
+import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 import weka.core.converters.CSVSaver;
 import weka.core.converters.ConverterUtils;
@@ -20,18 +17,26 @@ import java.io.File;
 import java.io.IOException;
 
 public class Classifier {
-    //private final String DATASET_PATH = "MFCCExtractor/data.csv";
     private static volatile Classifier classifierInstance;
     private final Standardize standardizeFilter;
     private final AttributeSelection attributeSelectionFilter;
-    private final RandomForest randomForestClassifier;
+    private final IBk ibkClassifier;
 
-    public Classifier() throws IOException {
+    /**
+     * Classifier constructor, builds the standardization and attribute selection filters
+     * and finally the IBk classifier
+     */
+    private Classifier() throws IOException {
         standardizeFilter = buildStandardizeFilter();
         attributeSelectionFilter = createAttributeSelectionFilter();
-        randomForestClassifier = createRandomForestClassifier();
+        ibkClassifier = createIbkClassifier();
     }
 
+    /**
+     *
+     * @param forceCreation is true when there is the need to recreate the classifier
+     * @return a Classifier instance that can be used for classification
+     */
     public static Classifier getClassifierInstance(boolean forceCreation) throws IOException {
         if(classifierInstance == null || forceCreation)
             synchronized (Classifier.class){
@@ -40,6 +45,10 @@ public class Classifier {
         return classifierInstance;
     }
 
+    /**
+     * Builds the standardization filter
+     * @return the standardization filter
+     */
     private Standardize buildStandardizeFilter() {
         Standardize filter = new Standardize();
         try {
@@ -52,13 +61,19 @@ public class Classifier {
         return filter;
     }
 
+    /**
+     * Creates the attribute selection filter, consisting of CorrelationAttributeEval
+     * and Ranker with a threshold of 0.1
+     * @return the attribute selection filter
+     */
     private AttributeSelection createAttributeSelectionFilter(){
         AttributeSelection filter = new AttributeSelection();
         try {
             Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
             Instances modifiedDataset = removeDuplicates(dataset);
-            CfsSubsetEval eval = new CfsSubsetEval();
-            BestFirst search = new BestFirst();
+            CorrelationAttributeEval eval = new CorrelationAttributeEval();
+            Ranker search = new Ranker();
+            search.setThreshold(0.1);
             filter.setEvaluator(eval);
             filter.setSearch(search);
             filter.setInputFormat(modifiedDataset);
@@ -68,31 +83,51 @@ public class Classifier {
         return filter;
     }
 
-    private RandomForest createRandomForestClassifier(){
-        RandomForest localRFClassifier = null;
+    /**
+     * Creates the IBk classifier used for classification
+     * @return the IBk classifier
+     */
+    private IBk createIbkClassifier(){
+        IBk localIbkClassifier = null;
         try {
             Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
             Instances modifiedDataset = removeDuplicates(dataset);
             modifiedDataset = standardize(modifiedDataset);
             modifiedDataset = selectAttributes(modifiedDataset);
-            localRFClassifier = new RandomForest();
-            localRFClassifier.buildClassifier(modifiedDataset);
+            localIbkClassifier = new IBk();
+            localIbkClassifier.setKNN(5);
+            localIbkClassifier.buildClassifier(modifiedDataset);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return localRFClassifier;
+        return localIbkClassifier;
     }
 
+    /**
+     * Applies the attribute selection
+     * @param dataset are the instances that will be filtered
+     * @return a new set of filtered instances
+     */
     private Instances selectAttributes(Instances dataset) throws Exception{
         Instances newDataset = Filter.useFilter(dataset, attributeSelectionFilter);
         return newDataset;
     }
 
+    /**
+     * Applies the standardization
+     * @param dataset are the instances that will be filtered
+     * @return a new set of filtered instances
+     */
     private Instances standardize(Instances dataset) throws Exception {
         Instances newDataset = Filter.useFilter(dataset, standardizeFilter);
         return newDataset;
     }
 
+    /**
+     * Removes duplicate instances from the dataset
+     * @param dataset are the instances that will be filtered
+     * @return a new set of filtered instances
+     */
     private Instances removeDuplicates(Instances dataset) throws Exception{
         RemoveDuplicates filter = new RemoveDuplicates();
         filter.setInputFormat(dataset);
@@ -100,6 +135,11 @@ public class Classifier {
         return newDataset;
     }
 
+    /**
+     * Classifies a new tuple
+     * @param instanceToClassify the instance to be classified
+     * @return a String containing the username of the user whose voice has been recognized
+     */
     public String classify(Instances instanceToClassify){
         String label = null;
 
@@ -107,7 +147,7 @@ public class Classifier {
             Instances filteredInstances = standardize(instanceToClassify);
             filteredInstances = selectAttributes(filteredInstances);
             Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
-            double index = randomForestClassifier.classifyInstance(filteredInstances.firstInstance());
+            double index = ibkClassifier.classifyInstance(filteredInstances.firstInstance());
             label = dataset.classAttribute().value((int) index);
         } catch (Exception e){
             e.printStackTrace();
@@ -115,7 +155,11 @@ public class Classifier {
         return label;
     }
 
-    public void oversampleNewVoices() {
+    /**
+     * Uses SMOTE to oversample the voice tuples of the last registered user.
+     * The new synthetic instances are then saved in the CSV for future use in classification.
+     */
+    public static void oversampleNewVoices() {
         try {
             SMOTE smote = new SMOTE();
             ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(Utils.REGISTERED_DATASET_PATH);
@@ -125,10 +169,6 @@ public class Classifier {
             smote.setPercentage(900);
             smote.setClassValue("last");
             Instances voices_smoted = Filter.useFilter(voices, smote);
-            /*File file = new File(Utils.REGISTERED_DATASET_PATH);
-            if (file.delete()) {
-                System.out.println("eliminato");
-            }*/
             CSVSaver saver = new CSVSaver();
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
