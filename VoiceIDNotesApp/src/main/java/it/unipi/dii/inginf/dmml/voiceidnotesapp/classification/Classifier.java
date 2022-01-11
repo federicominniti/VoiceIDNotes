@@ -10,7 +10,6 @@ import weka.core.converters.ConverterUtils;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Standardize;
-import weka.filters.unsupervised.instance.RemoveDuplicates;
 import weka.filters.supervised.instance.SMOTE;
 
 import java.io.File;
@@ -25,6 +24,7 @@ public class Classifier {
     /**
      * Classifier constructor, builds the standardization and attribute selection filters
      * and finally the IBk classifier
+     * @throws IOException when the dataset cannot be loaded
      */
     private Classifier() throws IOException {
         standardizeFilter = buildStandardizeFilter();
@@ -33,9 +33,10 @@ public class Classifier {
     }
 
     /**
-     *
+     * Implementation of the singleton pattern
      * @param forceCreation is true when there is the need to recreate the classifier
      * @return a Classifier instance that can be used for classification
+     * @throws IOException when the dataset cannot be loaded
      */
     public static Classifier getClassifierInstance(boolean forceCreation) throws IOException {
         if(classifierInstance == null || forceCreation)
@@ -52,9 +53,8 @@ public class Classifier {
     private Standardize buildStandardizeFilter() {
         Standardize filter = new Standardize();
         try {
-            Instances tuples = Utils.loadDataset(Utils.MERGED_DATSET);
-            Instances noDuplicates = removeDuplicates(tuples);
-            filter.setInputFormat(noDuplicates);
+            Instances tuples = Utils.loadDataset(Utils.MERGED_DATASET);
+            filter.setInputFormat(tuples);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,14 +69,13 @@ public class Classifier {
     private AttributeSelection createAttributeSelectionFilter(){
         AttributeSelection filter = new AttributeSelection();
         try {
-            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
-            Instances modifiedDataset = removeDuplicates(dataset);
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATASET);
             CorrelationAttributeEval eval = new CorrelationAttributeEval();
             Ranker search = new Ranker();
             search.setThreshold(0.1);
             filter.setEvaluator(eval);
             filter.setSearch(search);
-            filter.setInputFormat(modifiedDataset);
+            filter.setInputFormat(dataset);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -90,9 +89,8 @@ public class Classifier {
     private IBk createIbkClassifier(){
         IBk localIbkClassifier = null;
         try {
-            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
-            Instances modifiedDataset = removeDuplicates(dataset);
-            modifiedDataset = standardize(modifiedDataset);
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATASET);
+            Instances modifiedDataset = standardize(dataset);
             modifiedDataset = selectAttributes(modifiedDataset);
             localIbkClassifier = new IBk();
             localIbkClassifier.setKNN(5);
@@ -124,18 +122,6 @@ public class Classifier {
     }
 
     /**
-     * Removes duplicate instances from the dataset
-     * @param dataset are the instances that will be filtered
-     * @return a new set of filtered instances
-     */
-    private Instances removeDuplicates(Instances dataset) throws Exception{
-        RemoveDuplicates filter = new RemoveDuplicates();
-        filter.setInputFormat(dataset);
-        Instances newDataset = Filter.useFilter(dataset, filter);
-        return newDataset;
-    }
-
-    /**
      * Classifies a new tuple
      * @param instanceToClassify the instance to be classified
      * @return a String containing the username of the user whose voice has been recognized
@@ -146,7 +132,7 @@ public class Classifier {
         try{
             Instances filteredInstances = standardize(instanceToClassify);
             filteredInstances = selectAttributes(filteredInstances);
-            Instances dataset = Utils.loadDataset(Utils.MERGED_DATSET);
+            Instances dataset = Utils.loadDataset(Utils.MERGED_DATASET);
             double index = ibkClassifier.classifyInstance(filteredInstances.firstInstance());
             label = dataset.classAttribute().value((int) index);
         } catch (Exception e){

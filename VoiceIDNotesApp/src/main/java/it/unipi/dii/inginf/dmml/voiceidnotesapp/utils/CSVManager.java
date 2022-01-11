@@ -15,6 +15,11 @@ import java.util.List;
 
 public class CSVManager {
 
+    /**
+     * Appends a list of VoiceFeature instances to the CSV dataset
+     * @param voiceFeatures the voice features to be written to the file
+     * @param username the label of each voice feature
+     */
     public static void appendToCSV(ArrayList<VoiceFeature> voiceFeatures, String username) {
         CSVWriter writer = null;
         try {
@@ -46,6 +51,10 @@ public class CSVManager {
         }
     }
 
+    /**
+     * Removes the first tuple of voice features of a certain user from the CSV dataset of registered users
+     * @param username of the user
+     */
     public static void removeFirstInCSV(String username){
         try {
             CSVReader reader = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
@@ -68,6 +77,10 @@ public class CSVManager {
         }
     }
 
+    /**
+     * Merges the original dataset obtained from LibriSpeech and the dataset of the voice features of real
+     * registered users into a temporary CSV dataset
+     */
     public static void mergeCSV(){
         try {
             CSVReader registeredData = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
@@ -88,18 +101,3 @@ public class CSVManager {
     }
 
 }
-
-/*
-            for (int i = 0; i < voiceFeatures.size(); i++) {
-                for (int j = 0; j < voiceFeatures.get(i).getMfcc().length; j++) {
-                    csvPrinter.print(voiceFeatures.get(i).getMfcc()[j]);
-                }
-                for (int j = 0; j < voiceFeatures.get(i).getDelta().length; j++) {
-                    csvPrinter.print(voiceFeatures.get(i).getDelta()[j]);
-                }
-                for (int j = 0; j < voiceFeatures.get(i).getDeltadelta().length; j++) {
-                    csvPrinter.print(voiceFeatures.get(i).getDeltadelta()[j]);
-                }
-                csvPrinter.print(username);
-                csvPrinter.println();
-            } */

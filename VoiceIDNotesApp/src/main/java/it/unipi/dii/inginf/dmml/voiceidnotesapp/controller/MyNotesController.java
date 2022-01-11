@@ -40,6 +40,9 @@ public class MyNotesController {
 
     private static final int MAX_TITLE_LENGTH = 25;
 
+    /**
+     * Initializes the controller and loads all the user's notes
+     */
     public void initialize(){
         saveButton.setOnMouseClicked(clickEvent -> saveNewNote(clickEvent));
         searchButton.setOnMouseClicked(clickEvent -> searchNote(clickEvent));
@@ -55,6 +58,9 @@ public class MyNotesController {
         Utils.changeScene("/fxml/Profile.fxml", clickEvent);
     }
 
+    /**
+     * Stops the user when they try to enter too long titles
+     */
     private EventHandler<KeyEvent> maxLength() {
         return new EventHandler<KeyEvent>() {
             @Override
@@ -67,6 +73,11 @@ public class MyNotesController {
         };
     }
 
+    /**
+     * Deletes a note both from the GUI and the database
+     * @param toBeDeleted the note to be deleted
+     * @param container the GUI container in which the note is shown
+     */
     private EventHandler<MouseEvent> deleteNoteHandler(Note toBeDeleted, VBox container) {
         return new EventHandler<MouseEvent>() {
             @Override
@@ -92,6 +103,9 @@ public class MyNotesController {
         };
     }
 
+    /**
+     * Saves a new note to the database and shows it into the GUI
+     */
     private void saveNewNote(MouseEvent clickEvent){
         String title = newTitleTextField.getText();
         String content = newContentTextArea.getText();
@@ -114,6 +128,9 @@ public class MyNotesController {
         }
     }
 
+    /**
+     * Filters notes by title or by creation date
+     */
     private void searchNote(MouseEvent clickEvent){
         String searchedTitle = searchTextField.getText();
         LocalDate startDateLocal = startDatePicker.getValue();
@@ -165,6 +182,11 @@ public class MyNotesController {
         endDatePicker.setValue(null);
     }
 
+    /**
+     * Adapts the height of the TextArea of the single note based on the number of rows of the note's content
+     * @param searchedNote the note to be displayed
+     * @return the number of rows needed
+     */
     private int getNumbersOfTextRow(Note searchedNote){
         String[] splittedContent= searchedNote.getText().split("\n");
         int numRow = 0;
@@ -176,6 +198,10 @@ public class MyNotesController {
         return numRow;
     }
 
+    /**
+     * Updates the VBox containing the notes to be displayed to the user
+     * @param searchedNotes a list of notes to be shown
+     */
     private void createSearchedNotesGUI(List<Note> searchedNotes){
         for(int i = 0; i<searchedNotes.size(); i++){
             //AnchorPane anchorPane = new AnchorPane();
@@ -267,6 +293,12 @@ public class MyNotesController {
     }
 
 
+    /**
+     * Shows the update button after the edit of a saved note
+     * @param toBeModified the note to be edited
+     * @param footer the border pane that will contain the update button
+     * @param contentTextArea the edited textarea
+     */
     private EventHandler<MouseEvent> showUpdateButton(Note toBeModified, BorderPane footer, TextArea contentTextArea) {
         return new EventHandler<MouseEvent>() {
             @Override
@@ -285,6 +317,12 @@ public class MyNotesController {
         };
     }
 
+    /**
+     * Updates the content of a saved note edited by the user
+     * @param toBeModified the edited note
+     * @param footer the border pane containing the update button
+     * @param contentTextArea the textarea of the edited note
+     */
     private EventHandler<MouseEvent> updateNoteHandler(Note toBeModified, BorderPane footer, TextArea contentTextArea) {
         return new EventHandler<MouseEvent>() {
             @Override

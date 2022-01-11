@@ -19,6 +19,9 @@ public class ProfileController {
     @FXML private Label resultLabel;
 
 
+    /**
+     * Initialize the controller and sets the welcome message for the user
+     */
     public void initialize(){
         modifyPasswordButton.setOnMouseClicked(clickEvent -> modifyPassword(clickEvent));
         modifyPinButton.setOnMouseClicked(clickEvent -> modifyPin(clickEvent));
@@ -34,6 +37,9 @@ public class ProfileController {
         Utils.changeScene("/fxml/MyNotes.fxml", clickEvent);
     }
 
+    /**
+     * Handles the update of the pin used by the user to login
+     */
     private void modifyPin(MouseEvent clickEvent){
         if(pinField.getText().equals("") || repeatPinField.getText().equals("") ||
                 (!pinField.getText().equals("") && !repeatPinField.getText().equals("") && !pinField.getText().equals(repeatPinField.getText()))){
@@ -49,6 +55,9 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Handles the update of the password used by the user to login
+     */
     private void modifyPassword(MouseEvent clickEvent){
         if(passwordField.getText().equals("") || repeatPasswordField.getText().equals("") ||
                 (!passwordField.getText().equals("") && !repeatPasswordField.getText().equals("") &&

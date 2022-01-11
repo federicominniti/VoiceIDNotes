@@ -1,6 +1,5 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.classification;
 
-import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -12,6 +11,12 @@ public class VoiceFeature {
     private double delta[];
     private double deltadelta[];
 
+    /**
+     * Constructor building a VoiceFeature instance starting from the MFCCs, Delta and Delta-Delta arrays
+     * @param mfcc the mfccs double array
+     * @param delta the delta double array
+     * @param deltadelta the delta-delta double array
+     */
     public VoiceFeature(double mfcc[], double delta[], double deltadelta[]){
         this.mfcc = new double[NUMBER_MFCC_DELTA_DELTADELTA];
         this.delta = new double[NUMBER_MFCC_DELTA_DELTADELTA];
@@ -22,8 +27,6 @@ public class VoiceFeature {
             this.deltadelta[i] = deltadelta[i];
         }
     }
-
-    public VoiceFeature(){}
 
     public double[] getMfcc() {
         return mfcc;
@@ -49,10 +52,13 @@ public class VoiceFeature {
         this.deltadelta = deltadelta;
     }
 
+    /**
+     * Converts a VoiceFeature to Instances
+     */
     public Instances toInstance() {
         Instances instanceDataset = null;
         try {
-            instanceDataset = Utils.loadDataset(Utils.MERGED_DATSET);
+            instanceDataset = Utils.loadDataset(Utils.MERGED_DATASET);
             double[] attributesValues = new double[NUMBER_MFCC_DELTA_DELTADELTA * 3 + 1];
             for (int i = 0; i < NUMBER_MFCC_DELTA_DELTADELTA; i++) {
                 attributesValues[i] = mfcc[i];
@@ -70,6 +76,9 @@ public class VoiceFeature {
         return instanceDataset;
     }
 
+    /**
+     * Converts a VoiceFeature into a human-readable String
+     */
     public String toString() {
         String result = "";
         for (int i = 0; i < NUMBER_MFCC_DELTA_DELTADELTA; i++) {

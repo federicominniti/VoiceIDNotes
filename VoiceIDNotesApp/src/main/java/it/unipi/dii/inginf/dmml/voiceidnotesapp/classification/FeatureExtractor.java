@@ -14,16 +14,22 @@ public class FeatureExtractor {
     private BufferedReader bufferedReader;
     private final int USER_AUDIO_CHUNK_SIZE = 8 * 1024;
 
+    /**
+     * Constructor retrieving information from the Config class
+     * @throws IOException when it's impossible to read the Configuration parameters
+     */
     public FeatureExtractor() throws IOException {
         this.voiceExtractionServerIP = Config.getInstance().getVoiceExtractorServerIP();
         this.voiceExtractionServerPort = Config.getInstance().getVoiceExtractorServerPort();
-        //this.voiceExtractionServerIP = "127.0.0.1";
-        //this.voiceExtractionServerPort = 5001;
-
     }
 
+    /**
+     * Communicates with the features extraction server to get the features of an audio file containing the user's voice
+     * @param audioPath the path of the audio file
+     * @return a VoiceFeature object
+     */
     public VoiceFeature getVoiceFeature(String audioPath){
-        VoiceFeature voiceFeature = new VoiceFeature();
+        VoiceFeature voiceFeature = null;
         try(Socket voiceExtractionServerSocket = new Socket(voiceExtractionServerIP, voiceExtractionServerPort)){
             dataOutputStream = new DataOutputStream(voiceExtractionServerSocket.getOutputStream());
             bufferedReader = new BufferedReader(new InputStreamReader(voiceExtractionServerSocket.getInputStream()));
@@ -40,9 +46,8 @@ public class FeatureExtractor {
                 delta[i] = Double.parseDouble(featuresValues.get(i + VoiceFeature.NUMBER_MFCC_DELTA_DELTADELTA));
                 deltadelta[i] = Double.parseDouble(featuresValues.get(i + VoiceFeature.NUMBER_MFCC_DELTA_DELTADELTA));
             }
-            voiceFeature.setMfcc(mfcc);
-            voiceFeature.setDelta(delta);
-            voiceFeature.setDeltadelta(deltadelta);
+
+            voiceFeature = new VoiceFeature(mfcc, delta, deltadelta);
 
             dataOutputStream.close();
             bufferedReader.close();
@@ -52,6 +57,10 @@ public class FeatureExtractor {
         return voiceFeature;
     }
 
+    /**
+     * Sends an audio file to the features extraction server
+     * @param path the path of the audio file
+     */
     private void sendUserAudio(String path) throws Exception{
         File userAudio = new File(path);
         FileInputStream fileInputStream = new FileInputStream(userAudio);

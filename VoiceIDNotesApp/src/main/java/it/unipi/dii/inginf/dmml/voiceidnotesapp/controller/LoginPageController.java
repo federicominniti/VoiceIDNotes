@@ -36,6 +36,9 @@ public class LoginPageController {
 
     private VoiceFeature lastFeatureExtracted;
 
+    /**
+     * Initialize the controller and extracts a random sentence to help the user during the voice recognition
+     */
     public void initialize(){
         recordButton.setOnMouseClicked(clickEvent -> startRecording(clickEvent));
         loginButton.setOnMouseClicked(clickEvent -> loginHandler(clickEvent));
@@ -46,6 +49,11 @@ public class LoginPageController {
         lastFeatureExtracted = null;
     }
 
+    /**
+     * Creates a new thread 'worker' with the purpose of recording the voice of the user
+     * and subsequently retrieve the username associated with the voice features contained in
+     * the recorded audio
+     */
     private void startRecording(MouseEvent clickEvent) {
         disableLoginPageButtons(true);
         Utils.switchImage(recordButton, Utils.START_RECORDING_IMAGE);
@@ -69,6 +77,10 @@ public class LoginPageController {
         worker.start();
     }
 
+    /**
+     * Decides the credentials to use for the login, depending on the fields left empty by the user.
+     * If the PIN is empty, tries to login with username and password.
+     */
     private void loginHandler(MouseEvent clickEvent){
         String usernameVoiceDetected, pin, username, password;
         usernameVoiceDetected = foundUsernameLabel.getText().substring(3);
@@ -97,6 +109,9 @@ public class LoginPageController {
         registerButton.setDisable(flag);
     }
 
+    /**
+     * Performs the feature extraction and the classification of the submitted audio.
+     */
     private void getVoiceLabel() throws IOException {
         FeatureExtractor voiceFeatureExtractor = new FeatureExtractor();
 
@@ -114,7 +129,13 @@ public class LoginPageController {
         }
     }
 
-    //DA LEVARE
+    /**
+     * Performs the login with username and a credential.
+     * @param username the username of the user trying to login
+     * @param credential the pin or password
+     * @param withPin if true, the credential is a pin, otherwise it's a password
+     * @return a boolean containing the outcome of the login attempt
+     */
     boolean login(String username, String credential, boolean withPin){
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
         User loggedUser;
@@ -130,21 +151,6 @@ public class LoginPageController {
                 singleList.add(lastFeatureExtracted);
                 CSVManager.appendToCSV(singleList, loggedUser.getUsername());
             }
-
-            /*if(withPin && loggedUser.getCountAudio() < 100) {
-                loggedUser.setCountAudio(loggedUser.getCountAudio() + 1);
-                dbInstance.updateCount(loggedUser);
-                ArrayList<VoiceFeature> singleList = new ArrayList<>();
-                singleList.add(lastFeatureExtracted);
-                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
-            } else if(withPin && loggedUser.getCountAudio() >= 100) {
-                CSVManager.removeFirstInCSV(loggedUser.getUsername());
-                ArrayList<VoiceFeature> singleList = new ArrayList<>();
-                singleList.add(lastFeatureExtracted);
-                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
-            }*/
-
-
             return true;
         } else {
             return false;

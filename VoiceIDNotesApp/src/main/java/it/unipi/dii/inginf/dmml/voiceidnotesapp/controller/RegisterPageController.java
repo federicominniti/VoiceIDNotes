@@ -34,6 +34,9 @@ public class RegisterPageController {
     private ArrayList<VoiceFeature> extractedFeatures;
     private int countRecordings;
 
+    /**
+     * Initializes the controller and the arrays needed to show random sentences
+     */
     public void initialize(){
         countRecordings = 0;
         alreadyExtractedNums = new ArrayList<>();
@@ -48,6 +51,12 @@ public class RegisterPageController {
         Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
     }
 
+    /**
+     * Creates a new thread 'worker' with the purpose of registering the user's voice.
+     * The temporary audio file is then saved and sent immediately to the feature extraction server, and the
+     * response containing the features is saved in an array of VoiceFeatures.
+     * After 10 successfully recorded audios the recording button is disabled.
+     */
     private void startRecording(MouseEvent clickEvent) {
         int extracted;
         countRecordings++;
@@ -95,6 +104,10 @@ public class RegisterPageController {
         cancelButton.setDisable(flag);
     }
 
+    /**
+     * Registers the user to the LevelDB local database and appends the voice features to the CSV dataset
+     * after performing the SMOTE oversampling
+     */
     private void register(MouseEvent clickEvent) {
         //if(!countLabel.getText().equals("10/10")){
         //    Utils.showAlert("Error! Please finish to record your audio");
@@ -108,7 +121,7 @@ public class RegisterPageController {
         if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
             CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
             try {
-                Classifier.getClassifierInstance(false).oversampleNewVoices();
+                Classifier.oversampleNewVoices();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,6 +132,10 @@ public class RegisterPageController {
 
     }
 
+    /**
+     * Function to get the voice features of each audio recorded by the user
+     * @return a VoiceFeature instance
+     */
     private VoiceFeature getRecordingFeatures() throws IOException {
         FeatureExtractor voiceFeatureExtractor = new FeatureExtractor();
 

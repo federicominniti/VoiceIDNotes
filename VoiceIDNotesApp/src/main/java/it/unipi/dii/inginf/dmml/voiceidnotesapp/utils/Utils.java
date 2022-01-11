@@ -11,20 +11,16 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import weka.core.Attribute;
-import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class Utils {
     public final static String START_RECORDING_IMAGE = "/img/voice-recording.png";
     public final static String END_RECORDING_IMAGE = "/img/microphone-default.png";
     public final static String REGISTERED_DATASET_PATH = "registeredUser.csv";
-    public final static String MERGED_DATSET = "temp/mergedDataset.csv";
+    public final static String MERGED_DATASET = "temp/mergedDataset.csv";
     public static final String[] sentences = {
             "His family relocated to Indiana when he was a boy. He married Eliza Jane Sumner in 1851",
             "The following year the couple, with Ezra's brother and with their newborn son, set out for the Oregon where land could be claimed and settled on",
@@ -48,6 +44,9 @@ public class Utils {
             "The scents of what looked like pizza night taunted her, and she stood peering through the cracked door at the long dinner table."
     };
 
+    /**
+     * Utility function that uses the VoiceRecorder class to start the recording of an audio
+     */
     public static void startRecord() {
 
         VoiceRecorder recorder = new VoiceRecorder();
@@ -70,6 +69,10 @@ public class Utils {
         recorder.start();
     }
 
+    /**
+     * Utility function that shows an error alert to the user
+     * @param message the message to be displayed
+     */
     public static void showAlert(String message){
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setContentText(message);
@@ -83,6 +86,11 @@ public class Utils {
         errorAlert.show();
     }
 
+    /**
+     * Utility function that switches the image contained in the recording button
+     * @param recordButton the button clicked to record
+     * @param imagePath the path to the image to be set into the button
+     */
     public static void switchImage(Button recordButton, String imagePath){
         imagePath = Utils.class.getResource(imagePath).toString();
         Image recordingImages = new Image(imagePath);
@@ -93,6 +101,10 @@ public class Utils {
         recordButton.setGraphic(regordingImagesView);
     }
 
+    /**
+     * Utility function to change the current scene
+     * @param fxmlScene the path to the fxml of the next scene to be loaded
+     */
     public static Object changeScene(String fxmlScene, Event clickEvent){
         try {
             Scene scene;
@@ -112,26 +124,47 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Loads the dataset of both registered users voice features and LibriSpeech voice features
+     * @param datasetPath the path of the dataset to be loaded
+     * @return the Instances of the dataset
+     */
     public static Instances loadDataset(String datasetPath) throws Exception {
-        /*ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
-        Instances dataset = dataSource.getDataSet();
-        //dataset.setClassIndex(dataset.numAttributes() - 1);
-        dataset.setClassIndex(dataset.numAttributes() - 1);
-        File registeredFile = new File(REGISTERED_DATASET_PATH);
-        if(registeredFile.exists()) {
-            ConverterUtils.DataSource registeredDataSource = new ConverterUtils.DataSource(REGISTERED_DATASET_PATH);
-            Instances registeredData = registeredDataSource.getDataSet();
-            registeredData.setClassIndex(registeredData.numAttributes() - 1);
-
-            megedDataset.setClassIndex(dataset.numAttributes() - 1);
-            //System.out.println(dataset.checkInstance(registeredDataSource.getDataSet().instance(10)));
-            return megedDataset;
-        }*/
         CSVManager.mergeCSV();
         ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
         Instances dataset = dataSource.getDataSet();
         dataset.setClassIndex(dataset.numAttributes() - 1);
         return dataset;
+    }
+
+    /**
+     * Utility function to check that the password has at least 8 characters, 1 upper-case letter and 1 number
+     * @param password the password to be checked
+     */
+    public static boolean validatePassword(String password) {
+        if (password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"))
+            return true;
+        return false;
+    }
+
+    /**
+     * Utility function to check that the PIN is made of four numeric digits
+     * @param pin the pin to be checked
+     */
+    public static boolean validatePIN(String pin) {
+        if (pin.matches("^[0-9]{4}$"))
+            return true;
+        return false;
+    }
+
+    /**
+     * Utility function to check that the username is alphanumeric and longer than 5 characters
+     * @param username the username to be checked
+     */
+    public static boolean validateUsername(String username) {
+        if (username.matches("/^[A-Za-z0-9]+$/") && username.length() >= 5)
+            return true;
+        return false;
     }
 
 }

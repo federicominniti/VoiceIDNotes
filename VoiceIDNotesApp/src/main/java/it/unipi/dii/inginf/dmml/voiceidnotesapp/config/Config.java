@@ -21,12 +21,15 @@ import static java.lang.Thread.sleep;
 
 
 public class Config {
-    //ROBA DATABASE
     private static volatile Config localConfig;
     private String voiceExtractionServerIP;
     private int voiceExtractionServerPort;
     private String datasetPath;
 
+    /**
+     * Constructor implementing the singleton pattern
+     * @return a Config instance
+     */
     public static Config getInstance() throws IOException {
         if (localConfig == null) {
             synchronized (Config.class) {
@@ -38,6 +41,11 @@ public class Config {
         return localConfig;
     }
 
+    /**
+     * Used by the getInstance() to read the parameters contained in the config.xml file, after validating it against
+     * the config.xsd XML schema
+     * @return a Config instance
+     */
     private static Config getParams() {
         if (validConfigParams()) {
             XStream xstream = new XStream();
@@ -64,38 +72,10 @@ public class Config {
 
         return null;
     }
-/*
-    private static Config getParams() throws IOException {
-        if (validConfigParams()) {
-            File configFile = new File("config.xml");
-            XmlMapper xmlMapper = new XmlMapper();
-            String xmlString = inputStreamToString(new FileInputStream(configFile));
-            Config instance = xmlMapper.readValue(xmlString, Config.class);
-            return instance;
-        } else {
-            Utils.showAlert("XML Schema file could not be validated: wrong configuration parameters");
-            try {
-                sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.exit(1);
-        }
 
-        return null;
-    }
-
-    public static String inputStreamToString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        String line;
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
-    }
-*/
+    /**
+     * Validates the config.xml against the config.xsd XML schema
+     */
     private static boolean validConfigParams()
     {
         Document document;
