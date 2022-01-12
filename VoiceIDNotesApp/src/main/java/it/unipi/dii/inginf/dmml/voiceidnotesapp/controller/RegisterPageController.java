@@ -109,14 +109,18 @@ public class RegisterPageController {
      * after performing the SMOTE oversampling
      */
     private void register(MouseEvent clickEvent) {
-        //if(!countLabel.getText().equals("10/10")){
-        //    Utils.showAlert("Error! Please finish to record your audio");
-        //    return;
-        //}
+        if (!Utils.validatePassword(passwordField.getText()) || !Utils.validatePIN(pinField.getText()) ||
+            !Utils.validateUsername(usernameTextField.getText())) {
+            Utils.showAlert("Password must contain at least 8 characters, 1 upper-case letter and 1 number.\n" +
+                            "Pin must be exactly 4 digits \n" +
+                            "Username must be an alphanumeric string of at least 5 characters");
+            return;
+        }
         if (!passwordField.getText().equals(repeatPasswordField.getText())){
             Utils.showAlert("Error! Check password fields");
             return;
         }
+
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
         if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
             CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());

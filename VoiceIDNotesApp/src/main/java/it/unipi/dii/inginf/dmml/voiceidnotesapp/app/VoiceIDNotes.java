@@ -29,6 +29,6 @@ public class VoiceIDNotes extends Application {
         primaryStage.show();
         primaryStage.setResizable(false);
 
-        LevelDBDriver.getInstance().registerUser("Tim31", "password", "1234");
+        LevelDBDriver.getInstance().registerUser("Tim31", "Password1", "1234");
     }
 }

@@ -162,7 +162,7 @@ public class Utils {
      * @param username the username to be checked
      */
     public static boolean validateUsername(String username) {
-        if (username.matches("/^[A-Za-z0-9]+$/") && username.length() >= 5)
+        if (username.length() >= 5)
             return true;
         return false;
     }

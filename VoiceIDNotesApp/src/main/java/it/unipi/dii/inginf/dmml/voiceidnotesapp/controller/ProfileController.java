@@ -41,6 +41,10 @@ public class ProfileController {
      * Handles the update of the pin used by the user to login
      */
     private void modifyPin(MouseEvent clickEvent){
+        if (!Utils.validatePIN(pinField.getText())) {
+            Utils.showAlert("PIN must be exactly 4 digits");
+            return;
+        }
         if(pinField.getText().equals("") || repeatPinField.getText().equals("") ||
                 (!pinField.getText().equals("") && !repeatPinField.getText().equals("") && !pinField.getText().equals(repeatPinField.getText()))){
 
@@ -59,6 +63,10 @@ public class ProfileController {
      * Handles the update of the password used by the user to login
      */
     private void modifyPassword(MouseEvent clickEvent){
+        if (!Utils.validatePassword(passwordField.getText())) {
+            Utils.showAlert("Password must be at least 8 characters, 1 upper-case letter and 1 number");
+            return;
+        }
         if(passwordField.getText().equals("") || repeatPasswordField.getText().equals("") ||
                 (!passwordField.getText().equals("") && !repeatPasswordField.getText().equals("") &&
                         !passwordField.getText().equals(repeatPasswordField.getText()))){
