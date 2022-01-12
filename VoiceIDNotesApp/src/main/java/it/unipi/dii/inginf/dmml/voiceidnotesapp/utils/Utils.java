@@ -1,5 +1,6 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.utils;
 
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Utils {
@@ -67,8 +69,6 @@ public class Utils {
         });
 
         stopper.start();
-
-        // start recording
         recorder.start();
     }
 
@@ -133,7 +133,9 @@ public class Utils {
      * @return the Instances of the dataset
      */
     public static Instances loadDataset(String datasetPath) throws Exception {
-        CSVManager.mergeCSV();
+        File completeDataset = new File(datasetPath);
+        if(!completeDataset.exists())
+            CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
         ConverterUtils.DataSource dataSource = new ConverterUtils.DataSource(datasetPath);
         Instances dataset = dataSource.getDataSet();
         dataset.setClassIndex(dataset.numAttributes() - 1);

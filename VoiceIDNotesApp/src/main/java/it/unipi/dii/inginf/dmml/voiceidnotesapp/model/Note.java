@@ -1,6 +1,5 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Note {

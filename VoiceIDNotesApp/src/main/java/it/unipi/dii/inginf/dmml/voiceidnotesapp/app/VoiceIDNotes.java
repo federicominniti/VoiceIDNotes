@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class VoiceIDNotes extends Application {
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,6 +29,6 @@ public class VoiceIDNotes extends Application {
         primaryStage.setResizable(false);
 
         //test user
-        LevelDBDriver.getInstance().registerUser("Tim31", "Password1", "1234");
+        LevelDBDriver.getInstance().registerUser("Federico", "Password1", "1234");
     }
 }

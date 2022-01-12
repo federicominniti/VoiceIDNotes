@@ -17,9 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,10 +144,10 @@ public class LoginPageController {
             session.setUserNotes(userNotes);
 
             if(lastFeatureExtracted != null) {
-                CSVManager.removeFirstInCSV(loggedUser.getUsername());
+                CSVManager.removeFirstInCSV(loggedUser.getUsername(), Utils.REGISTERED_DATASET_PATH);
                 ArrayList<VoiceFeature> singleList = new ArrayList<>();
                 singleList.add(lastFeatureExtracted);
-                CSVManager.appendToCSV(singleList, loggedUser.getUsername());
+                CSVManager.appendToCSV(singleList, loggedUser.getUsername(), Utils.REGISTERED_DATASET_PATH);
             }
             return true;
         } else {

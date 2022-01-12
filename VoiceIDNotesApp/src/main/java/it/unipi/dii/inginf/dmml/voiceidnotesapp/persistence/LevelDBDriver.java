@@ -100,7 +100,6 @@ public class LevelDBDriver {
 
     public User login(String username, String credential, boolean withPin) {
         String buildKey = "user:" + username + ":";
-        //String countAudio = get(buildKey + "countaudio");
         String pin = get(buildKey + "pin");
         String password = get(buildKey + "password");
         if (withPin && pin.equals(credential)) {
@@ -110,46 +109,6 @@ public class LevelDBDriver {
         } else
             return null;
     }
-
-    /*public void updateCount(User user){
-        String buildString = "user:" + user.getUsername() + ":countaudio";
-        put(buildString, String.valueOf(user.getCountAudio()));
-    }*/
-
-/*
-    public List<Note> getAllNotesOfUser(User user) {
-        String buildKey = "note:" + user.getUsername();
-        List<Note> list = new ArrayList<>();
-        try (DBIterator iter = database.iterator()) {
-            iter.seek(bytes(buildKey));
-
-            while (iter.hasNext()) {
-                Map.Entry<byte[], byte[]> current = iter.next();
-                String partialKey = asString(current.getKey());
-                String title = "";
-                String text = "";
-                Date d = null;
-                if (partialKey.equals("title"))
-                    title = asString(current.getValue());
-                else if (partialKey.equals("text"))
-                    text = asString(current.getValue());
-                else if (partialKey.equals("countaudio")) {
-
-                }
-                else {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
-                    d = sdf.parse(asString(current.getKey()));
-                }
-
-                list.add(new Note(title, text, d));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-*/
 
     public List<Note> getAllNotesOfUser(User user) {
         String buildKey = "note:" + user.getUsername();

@@ -11,13 +11,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class RegisterPageController {
@@ -35,7 +32,7 @@ public class RegisterPageController {
     private int countRecordings;
 
     /**
-     * Initializes the controller and the arrays needed to show random sentences
+     * Initializes the controller and the needed arrays to avoid showing duplicate random sentences
      */
     public void initialize(){
         countRecordings = 0;
@@ -44,11 +41,10 @@ public class RegisterPageController {
         recordButton.setOnMouseClicked(clickEvent -> startRecording(clickEvent));
         cancelButton.setOnMouseClicked(clickEvent -> backToLogin(clickEvent));
         registerButton.setOnMouseClicked(clickEvent -> register(clickEvent));
-        //ROBA DB
     }
 
     private void backToLogin(MouseEvent clickEvent) {
-        Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
+        Utils.changeScene(Utils.LOGIN_PAGE, clickEvent);
     }
 
     /**
@@ -78,7 +74,7 @@ public class RegisterPageController {
                     disableRegisterPageButtons(false);
                     VoiceFeature voicefeature = getRecordingFeatures();
                     if (voicefeature == null) {
-                        Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
+                        Utils.changeScene(Utils.LOGIN_PAGE, clickEvent);
                         return;
                     }
                     extractedFeatures.add(getRecordingFeatures());
@@ -101,7 +97,7 @@ public class RegisterPageController {
     }
 
     /**
-     * Registers the user to the LevelDB local database and appends the voice features to the CSV dataset
+     * Handle the user's registration with LevelDB local database and appends the voice features to the CSV dataset
      * after performing the SMOTE oversampling
      */
     private void register(MouseEvent clickEvent) {
@@ -119,7 +115,7 @@ public class RegisterPageController {
 
         LevelDBDriver dbInstance = LevelDBDriver.getInstance();
         if (dbInstance.registerUser(usernameTextField.getText(), passwordField.getText(), pinField.getText())) {
-            CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText());
+            CSVManager.appendToCSV(extractedFeatures, usernameTextField.getText(), Utils.REGISTERED_DATASET_PATH);
             try {
                 Classifier.oversampleNewVoices();
             } catch (Exception e) {

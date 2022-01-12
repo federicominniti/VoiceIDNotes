@@ -28,9 +28,6 @@ public class ProfileController {
         cancelButton.setOnMouseClicked(clickEvent -> returnToNotes(clickEvent));
 
         usernameLabel.setText("Hi, " + Session.getLocalSession().getLoggedUser().getUsername());
-
-        //ROBA DB
-        //ArrayList<Note> searchedNotes = searchByDatesInterval(LocalDate.parse("1-1-1980"), LocalDate.now());
     }
 
     private void returnToNotes(MouseEvent clickEvent) {

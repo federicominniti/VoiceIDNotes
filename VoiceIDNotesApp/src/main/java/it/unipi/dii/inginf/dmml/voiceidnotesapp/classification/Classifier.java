@@ -1,5 +1,7 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.classification;
 
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
+import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.CSVManager;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.utils.Utils;
 import weka.attributeSelection.CorrelationAttributeEval;
 import weka.attributeSelection.Ranker;
@@ -159,6 +161,9 @@ public class Classifier {
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
             saver.writeBatch();
+            //NEW
+            CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
+            //---
             Classifier.getClassifierInstance(true);
         } catch (Exception e) {
             e.printStackTrace();

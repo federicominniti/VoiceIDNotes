@@ -13,11 +13,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static java.lang.Thread.sleep;
 
 
 public class Config {

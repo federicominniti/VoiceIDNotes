@@ -4,20 +4,12 @@ public class User {
     private String username;
     private String password;
     private String pin;
-    //private int countAudio;
 
-    public User(String username, String password, String pin/*, int countAudio*/) {
+    public User(String username, String password, String pin) {
         this.username = username;
         this.password = password;
         this.pin = pin;
-        //this.countAudio = countAudio;
     }
-
-
-    /*public User(String username, int countAudio) {
-        this.username = username;
-        this.countAudio = countAudio;
-    }*/
 
     public void setUsername(String username) {
         this.username = username;
@@ -42,12 +34,4 @@ public class User {
     public String getPin() {
         return pin;
     }
-
-    /*public int getCountAudio() {
-        return countAudio;
-    }
-
-    public void setCountAudio(int countAudio) {
-        this.countAudio = countAudio;
-    }*/
 }

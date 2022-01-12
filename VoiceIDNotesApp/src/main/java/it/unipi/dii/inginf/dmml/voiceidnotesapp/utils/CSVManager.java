@@ -4,7 +4,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import it.unipi.dii.inginf.dmml.voiceidnotesapp.classification.VoiceFeature;
-import it.unipi.dii.inginf.dmml.voiceidnotesapp.config.Config;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,13 +19,13 @@ public class CSVManager {
      * @param voiceFeatures the voice features to be written to the file
      * @param username the label of each voice feature
      */
-    public static void appendToCSV(ArrayList<VoiceFeature> voiceFeatures, String username) {
+    public static void appendToCSV(ArrayList<VoiceFeature> voiceFeatures, String username, String path) {
         CSVWriter writer = null;
         try {
-            File registeredFile = new File(Utils.REGISTERED_DATASET_PATH);
+            File registeredFile = new File(path);
             boolean exists = registeredFile.exists();
 
-            writer = new CSVWriter(new FileWriter(Utils.REGISTERED_DATASET_PATH, true));
+            writer = new CSVWriter(new FileWriter(path, true));
 
             if(!exists){
                 String header = "mfcc1,mfcc2,mfcc3,mfcc4,mfcc5,mfcc6,mfcc7,mfcc8,mfcc9,mfcc10,mfcc11,mfcc12,mfcc13," +
@@ -55,9 +54,9 @@ public class CSVManager {
      * Removes the first tuple of voice features of a certain user from the CSV dataset of registered users
      * @param username of the user
      */
-    public static void removeFirstInCSV(String username){
+    public static void removeFirstInCSV(String username, String path){
         try {
-            CSVReader reader = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
+            CSVReader reader = new CSVReader(new FileReader(path));
             List<String[]> allElements = reader.readAll();
             int index = 0;
             for (int i = 0; i<allElements.size(); i++){
@@ -67,7 +66,7 @@ public class CSVManager {
                 }
             }
             allElements.remove(index);
-            FileWriter fileWriter = new FileWriter(Utils.REGISTERED_DATASET_PATH);
+            FileWriter fileWriter = new FileWriter(path);
             CSVWriter writer = new CSVWriter(fileWriter);
             for(int i = 0; i<allElements.size(); i++)
                 writer.writeNext(allElements.get(i), false);
@@ -81,16 +80,18 @@ public class CSVManager {
      * Merges the original dataset obtained from LibriSpeech and the dataset of the voice features of real
      * registered users into a temporary CSV dataset
      */
-    public static void mergeCSV(){
+    public static void mergeCSV(String csv1, String csv2){
         try {
-            CSVReader registeredData = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
-            CSVReader data = new CSVReader(new FileReader(Config.getInstance().getDatasetPath()));
+            //CSVReader registeredData = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
+            //CSVReader data = new CSVReader(new FileReader(Config.getInstance().getDatasetPath()));
+            CSVReader registeredData = new CSVReader(new FileReader(csv1));
+            CSVReader data = new CSVReader(new FileReader(csv2));
             List<String[]> allElements = data.readAll();
             List<String[]> registeredList = registeredData.readAll();
             registeredList.remove(0);
             allElements.addAll(registeredList);
 
-            FileWriter fileWriter = new FileWriter("temp/mergedDataset.csv");
+            FileWriter fileWriter = new FileWriter(Utils.MERGED_DATASET);
             CSVWriter writer = new CSVWriter(fileWriter);
             for(int i = 0; i<allElements.size(); i++)
                 writer.writeNext(allElements.get(i), false);

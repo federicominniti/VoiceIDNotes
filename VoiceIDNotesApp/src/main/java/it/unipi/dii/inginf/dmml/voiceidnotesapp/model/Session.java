@@ -1,6 +1,5 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
