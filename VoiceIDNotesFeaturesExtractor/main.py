@@ -10,7 +10,7 @@ DATASET = "audio/"
 def create_mfcc_dataset():
     # construct the header of the table
     header = ''
-    # we have to list the 13 MFCC
+    # we have: MFCC, 13 DELTA, 13 DELTADELTA, username
     for i in range(1, 14):
         header += f' mfcc{i}'
 
@@ -23,7 +23,7 @@ def create_mfcc_dataset():
     header += ' username'
     header = header.split()
 
-    # data.csv will be the new dataset
+    # features extracted are saved in the data.csv
     file = open('data.csv', 'w', newline='')
     with file:
         writer = csv.writer(file)
