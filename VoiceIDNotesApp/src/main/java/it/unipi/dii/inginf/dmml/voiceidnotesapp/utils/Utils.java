@@ -1,7 +1,5 @@
 package it.unipi.dii.inginf.dmml.voiceidnotesapp.utils;
 
-//import com.sun.javafx.scene.layout.region.Margins;
-
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +19,11 @@ public class Utils {
     public final static String END_RECORDING_IMAGE = "/img/microphone-default.png";
     public final static String REGISTERED_DATASET_PATH = "registeredUser.csv";
     public final static String MERGED_DATASET = "temp/mergedDataset.csv";
+    public final static String LOGIN_PAGE = "/fxml/LoginPage.fxml";
+    public final static String MYNOTES = "/fxml/MyNotes.fxml";
+    public final static String REGISTER_PAGE = "/fxml/RegisterPage.fxml";
+    public final static String PROFILE_PAGE = "/fxml/ProfilePage.fxml";
+
     public static final String[] sentences = {
             "His family relocated to Indiana when he was a boy. He married Eliza Jane Sumner in 1851",
             "The following year the couple, with Ezra's brother and with their newborn son, set out for the Oregon where land could be claimed and settled on",

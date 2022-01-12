@@ -8,17 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FeatureExtractor {
-    private final String voiceExtractionServerIP;
-    private final int voiceExtractionServerPort;
+    private String voiceExtractionServerIP;
+    private int voiceExtractionServerPort;
     private DataOutputStream dataOutputStream;
     private BufferedReader bufferedReader;
     private final int USER_AUDIO_CHUNK_SIZE = 8 * 1024;
-
     /**
      * Constructor retrieving information from the Config class
-     * @throws IOException when it's impossible to read the Configuration parameters
      */
-    public FeatureExtractor() throws IOException {
+    public FeatureExtractor() {
         this.voiceExtractionServerIP = Config.getInstance().getVoiceExtractorServerIP();
         this.voiceExtractionServerPort = Config.getInstance().getVoiceExtractorServerPort();
     }

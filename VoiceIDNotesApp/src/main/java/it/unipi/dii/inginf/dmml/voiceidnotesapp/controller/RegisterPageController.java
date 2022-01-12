@@ -76,19 +76,15 @@ public class RegisterPageController {
                 Platform.runLater(() -> {
                     Utils.switchImage(recordButton, Utils.END_RECORDING_IMAGE);
                     disableRegisterPageButtons(false);
-                    try {
-                        VoiceFeature voicefeature = getRecordingFeatures();
-                        if (voicefeature == null) {
-                            Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
-                            return;
-                        }
-                        extractedFeatures.add(getRecordingFeatures());
-                        if (countRecordings == 10) {
-                            recordButton.setDisable(true);
-                            countLabel.setTextFill(Color.GREEN);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    VoiceFeature voicefeature = getRecordingFeatures();
+                    if (voicefeature == null) {
+                        Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
+                        return;
+                    }
+                    extractedFeatures.add(getRecordingFeatures());
+                    if (countRecordings == 10) {
+                        recordButton.setDisable(true);
+                        countLabel.setTextFill(Color.GREEN);
                     }
                 });
             }
@@ -129,7 +125,7 @@ public class RegisterPageController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Utils.changeScene("/fxml/LoginPage.fxml", clickEvent);
+            Utils.changeScene(Utils.LOGIN_PAGE, clickEvent);
         } else {
             Utils.showAlert("Error: username already present");
         }
@@ -140,7 +136,7 @@ public class RegisterPageController {
      * Function to get the voice features of each audio recorded by the user
      * @return a VoiceFeature instance
      */
-    private VoiceFeature getRecordingFeatures() throws IOException {
+    private VoiceFeature getRecordingFeatures() {
         FeatureExtractor voiceFeatureExtractor = new FeatureExtractor();
 
         VoiceFeature voiceFeature = voiceFeatureExtractor.getVoiceFeature(VoiceRecorder.AUDIO_PATH);

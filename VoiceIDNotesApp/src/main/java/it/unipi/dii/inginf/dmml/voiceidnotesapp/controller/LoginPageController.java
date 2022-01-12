@@ -89,7 +89,7 @@ public class LoginPageController {
         password = passwordTextField.getText();
 
         if((pin.equals("") && login(username, password, false)) || (!pin.equals("") && login(usernameVoiceDetected, pin, true))) {
-            Utils.changeScene("/fxml/MyNotes.fxml", clickEvent);
+            Utils.changeScene(Utils.MYNOTES, clickEvent);
         }else
         if(pin.equals("")) {
             Utils.showAlert("Error! Your username and/or password are wrong. Try again");
@@ -100,7 +100,7 @@ public class LoginPageController {
     }
 
     private void registrationHandler(MouseEvent clickEvent){
-        Utils.changeScene("/fxml/RegisterPage.fxml", clickEvent);
+        Utils.changeScene(Utils.REGISTER_PAGE, clickEvent);
     }
 
     private void disableLoginPageButtons(boolean flag) {
@@ -110,7 +110,7 @@ public class LoginPageController {
     }
 
     /**
-     * Performs the feature extraction and the classification of the submitted audio.
+     * Handles the feature extraction and the classification of the submitted audio.
      */
     private void getVoiceLabel() throws IOException {
         FeatureExtractor voiceFeatureExtractor = new FeatureExtractor();
