@@ -9,19 +9,19 @@ FILE_PACKET_SIZE = 8 * 1024
 def start_server():
     host = 'localhost'
     port = 5001
-    s = jpysocket.jpysocket()
-    s.bind((host, port))
-    s.listen(5)
+    socket = jpysocket.jpysocket()
+    socket.bind((host, port))
+    socket.listen(5)
     print("Server started.. ")
 
     while True:
-        connection, address = s.accept()
-        msg_recv = connection.recv(SIMPLE_PACKET_SIZE)
-        msg_recv = jpysocket.jpydecode(msg_recv)
-        if msg_recv == "extract":
+        connection, address = socket.accept()
+        msg_encoded = connection.recv(SIMPLE_PACKET_SIZE)
+        msg = jpysocket.jpydecode(msg_encoded)
+        if msg == "extract":
             print("\nRequest for extracting features")
-            msg_recv = connection.recv(SIMPLE_PACKET_SIZE)
-            size = int((int(jpysocket.jpydecode(msg_recv))) / FILE_PACKET_SIZE) + 1
+            msg_encoded = connection.recv(SIMPLE_PACKET_SIZE)
+            size = int((int(jpysocket.jpydecode(msg_encoded))) / FILE_PACKET_SIZE) + 1
 
             # temporary .wav file, opened in binary
             f = open("temp.wav", 'wb')
@@ -38,4 +38,4 @@ def start_server():
             connection.send(bytes(result + "\r\n", 'UTF-8'))
             os.remove("temp.wav")
         connection.close()
-    s.close()
+    socket.close()
