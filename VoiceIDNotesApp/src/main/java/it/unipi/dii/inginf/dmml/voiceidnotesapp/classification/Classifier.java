@@ -161,9 +161,7 @@ public class Classifier {
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
             saver.writeBatch();
-            //NEW
             CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
-            //---
             Classifier.getClassifierInstance(true);
         } catch (Exception e) {
             e.printStackTrace();

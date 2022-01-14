@@ -57,6 +57,12 @@ public class LevelDBDriver {
         database.delete(bytes(key));
     }
 
+    /**
+     * Function that add a new user to the database if there isn't already one with the same username
+     * @param username the username to be registered
+     * @param password password associated to the username
+     * @param pin pin of the new user
+     */
     public boolean registerUser(String username, String password, String pin) {
         if (checkIfUserExists(username))
             return false;
@@ -76,6 +82,11 @@ public class LevelDBDriver {
         return true;
     }
 
+    /**
+     * Add a new note of a specific user to the database
+     * @param note New note to be added
+     * @param user the owner of the note
+     */
     public void addNote(Note note, User user) {
         String buildKey = "note:";
         buildKey += user.getUsername() + ":";
@@ -87,6 +98,11 @@ public class LevelDBDriver {
         put(buildKey + "text", note.getText());
     }
 
+    /**
+     * Deletes a note of a user from the database
+     * @param note the note to be deleted
+     * @param user the owner of the note
+     */
     public void deleteNote(Note note, User user) {
         String buildKey = "note:";
         buildKey += user.getUsername() + ":";
@@ -98,6 +114,13 @@ public class LevelDBDriver {
         delete(buildKey + "text");
     }
 
+    /**
+     * Checks if the user exists and that the credential used on login by the user is the same as the one in the database
+     * @param username the user trying to login
+     * @param credential a pin or password
+     * @param withPin true if credential is a pin, false if it's a password
+     * @return the user logged in or null if the login failed
+     */
     public User login(String username, String credential, boolean withPin) {
         String buildKey = "user:" + username + ":";
         String pin = get(buildKey + "pin");
@@ -110,6 +133,11 @@ public class LevelDBDriver {
             return null;
     }
 
+    /**
+     * Take all the notes of a particular user
+     * @param user the owner of the notes
+     * @return a list of user's notes
+     */
     public List<Note> getAllNotesOfUser(User user) {
         String buildKey = "note:" + user.getUsername();
         List<Note> notes = new ArrayList<>();
@@ -147,6 +175,10 @@ public class LevelDBDriver {
         return notes;
     }
 
+    /** Updates the content of a note edited by the user
+    * @param modifiedNote the edited note to be updated on the database
+    * @param user the owner of the note
+    */
     public void updateNote(Note modifiedNote, User user){
         String buildKey = "note:" + user.getUsername() + ":";
         String pattern = "yyMMddHHmmss";
@@ -155,11 +187,19 @@ public class LevelDBDriver {
         put(buildKey, modifiedNote.getText());
     }
 
+    /**
+     * Updates the pin credential of a user
+     * @param user the user changing their pin
+     */
     public void changePin(User user){
         String buildKey = "user:" + user.getUsername() + ":pin";
         put(buildKey, user.getPin());
     }
 
+    /**
+     * Updates the password credential of a user
+     * @param user the user changing their password
+     */
     public void changePassword(User user){
         String buildKey = "user:" + user.getUsername() + ":password";
         put(buildKey, user.getPassword());

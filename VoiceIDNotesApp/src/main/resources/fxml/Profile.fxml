@@ -8,31 +8,35 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.dii.inginf.dmml.voiceidnotesapp.controller.ProfileController">
    <children>
-      <Label layoutX="161.0" layoutY="52.0" text="Profile" textFill="#204dd3">
+      <Label layoutX="161.0" layoutY="39.0" text="Profile" textFill="#204dd3">
          <font>
             <Font name="Arial" size="30.0" />
          </font>
       </Label>
-      <PasswordField fx:id="repeatPasswordField" layoutX="222.0" layoutY="205.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
-      <PasswordField fx:id="pinField" layoutX="222.0" layoutY="299.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
-      <Label layoutX="70.0" layoutY="210.0" text="Repeat new password:" />
-      <Label layoutX="142.0" layoutY="304.0" text="New PIN:" />
+      <PasswordField fx:id="repeatPasswordField" layoutX="222.0" layoutY="201.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
+      <PasswordField fx:id="pinField" layoutX="222.0" layoutY="321.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
+      <Label layoutX="70.0" layoutY="206.0" text="Repeat new password:" />
+      <Label layoutX="142.0" layoutY="326.0" text="New PIN:" />
       <Button fx:id="cancelButton" layoutX="302.0" layoutY="434.0" mnemonicParsing="false" style="-fx-background-color: pink;" text="Cancel" />
-      <PasswordField fx:id="passwordField" layoutX="222.0" layoutY="169.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
-      <Label layoutX="107.0" layoutY="174.0" text="New password:" />
-      <Label fx:id="usernameLabel" alignment="TOP_CENTER" layoutX="7.0" layoutY="108.0" prefHeight="26.0" prefWidth="393.0" text="Username">
+      <PasswordField fx:id="passwordField" layoutX="222.0" layoutY="165.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
+      <Label layoutX="107.0" layoutY="170.0" text="New password:" />
+      <Label fx:id="usernameLabel" alignment="TOP_CENTER" layoutX="7.0" layoutY="88.0" prefHeight="26.0" prefWidth="393.0" text="Username">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="100.0" layoutY="343.0" text="Repeat New PIN:" />
-      <PasswordField fx:id="repeatPinField" layoutX="222.0" layoutY="338.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
-      <Button fx:id="modifyPasswordButton" layoutX="144.0" layoutY="250.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Modify Password" />
-      <Button fx:id="modifyPinButton" layoutX="161.0" layoutY="380.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Modify PIN" />
+      <Label layoutX="100.0" layoutY="365.0" text="Repeat New PIN:" />
+      <PasswordField fx:id="repeatPinField" layoutX="222.0" layoutY="360.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
+      <Button fx:id="modifyPasswordButton" layoutX="144.0" layoutY="238.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Modify Password" />
+      <Button fx:id="modifyPinButton" layoutX="161.0" layoutY="402.0" mnemonicParsing="false" style="-fx-background-color: lightblue;" text="Modify PIN" />
       <Label fx:id="resultLabel" alignment="CENTER" layoutX="14.0" layoutY="434.0" prefHeight="26.0" prefWidth="280.0" textFill="#7add00">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
+      <PasswordField fx:id="oldPasswordField" layoutX="222.0" layoutY="128.0" prefHeight="26.0" prefWidth="108.0" promptText="Abcd4321" />
+      <Label layoutX="112.0" layoutY="133.0" text="Old password:" />
+      <PasswordField fx:id="oldPinField" layoutX="222.0" layoutY="284.0" prefHeight="26.0" prefWidth="80.0" promptText="1234" />
+      <Label layoutX="142.0" layoutY="289.0" text="Old PIN:" />
    </children>
 </AnchorPane>

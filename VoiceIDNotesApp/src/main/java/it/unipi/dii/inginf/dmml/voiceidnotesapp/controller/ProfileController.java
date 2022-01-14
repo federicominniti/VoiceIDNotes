@@ -17,6 +17,8 @@ public class ProfileController {
     @FXML private Button modifyPinButton;
     @FXML private Button cancelButton;
     @FXML private Label resultLabel;
+    @FXML private PasswordField oldPasswordField;
+    @FXML private PasswordField oldPinField;
 
 
     /**
@@ -38,12 +40,17 @@ public class ProfileController {
      * Handles the update of the pin used by the user to login
      */
     private void modifyPin(MouseEvent clickEvent){
+        if(!oldPinField.getText().equals(Session.getLocalSession().getLoggedUser().getPin())){
+            Utils.showAlert("Old pin is wrong! Please try again");
+            return;
+        }
         if (!Utils.validatePIN(pinField.getText())) {
             Utils.showAlert("PIN must be exactly 4 digits");
             return;
         }
         if(pinField.getText().equals("") || repeatPinField.getText().equals("") ||
-                (!pinField.getText().equals("") && !repeatPinField.getText().equals("") && !pinField.getText().equals(repeatPinField.getText()))){
+                (!pinField.getText().equals("") && !repeatPinField.getText().equals("") &&
+                        !pinField.getText().equals(repeatPinField.getText()))){
 
             Utils.showAlert("Pin must not be empty and must be equal in the two fields!");
             resultLabel.setText("");
@@ -52,6 +59,7 @@ public class ProfileController {
             LevelDBDriver.getInstance().changePin(Session.getLocalSession().getLoggedUser());
             pinField.setText("");
             repeatPinField.setText("");
+            oldPinField.setText("");
             resultLabel.setText("Pin correctly changed");
         }
     }
@@ -60,6 +68,10 @@ public class ProfileController {
      * Handles the update of the password used by the user to login
      */
     private void modifyPassword(MouseEvent clickEvent){
+        if(!oldPasswordField.getText().equals(Session.getLocalSession().getLoggedUser().getPassword())){
+            Utils.showAlert("Old password is wrong! Please try again");
+            return;
+        }
         if (!Utils.validatePassword(passwordField.getText())) {
             Utils.showAlert("Password must be at least 8 characters, 1 upper-case letter and 1 number");
             return;
@@ -75,6 +87,7 @@ public class ProfileController {
             LevelDBDriver.getInstance().changePassword(Session.getLocalSession().getLoggedUser());
             passwordField.setText("");
             repeatPasswordField.setText("");
+            oldPasswordField.setText("");
             resultLabel.setText("Password correctly changed");
         }
     }

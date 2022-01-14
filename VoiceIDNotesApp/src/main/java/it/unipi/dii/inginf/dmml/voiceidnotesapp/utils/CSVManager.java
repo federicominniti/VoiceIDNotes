@@ -82,8 +82,6 @@ public class CSVManager {
      */
     public static void mergeCSV(String csv1, String csv2){
         try {
-            //CSVReader registeredData = new CSVReader(new FileReader(Utils.REGISTERED_DATASET_PATH));
-            //CSVReader data = new CSVReader(new FileReader(Config.getInstance().getDatasetPath()));
             CSVReader registeredData = new CSVReader(new FileReader(csv1));
             CSVReader data = new CSVReader(new FileReader(csv2));
             List<String[]> allElements = data.readAll();

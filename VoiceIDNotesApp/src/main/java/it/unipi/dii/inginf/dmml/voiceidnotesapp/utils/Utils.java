@@ -15,6 +15,8 @@ import weka.core.converters.ConverterUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     public final static String START_RECORDING_IMAGE = "/img/voice-recording.png";
@@ -24,7 +26,7 @@ public class Utils {
     public final static String LOGIN_PAGE = "/fxml/LoginPage.fxml";
     public final static String MYNOTES = "/fxml/MyNotes.fxml";
     public final static String REGISTER_PAGE = "/fxml/RegisterPage.fxml";
-    public final static String PROFILE_PAGE = "/fxml/ProfilePage.fxml";
+    public final static String PROFILE_PAGE = "/fxml/Profile.fxml";
 
     public static final String[] sentences = {
             "His family relocated to Indiana when he was a boy. He married Eliza Jane Sumner in 1851",
@@ -147,9 +149,10 @@ public class Utils {
      * @param password the password to be checked
      */
     public static boolean validatePassword(String password) {
-        if (password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"))
-            return true;
-        return false;
+        Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+        Matcher matcher = pattern.matcher(password);
+
+        return matcher.matches();
     }
 
     /**
