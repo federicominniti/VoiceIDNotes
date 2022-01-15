@@ -29,6 +29,7 @@ public class Classifier {
      * @throws IOException when the dataset cannot be loaded
      */
     private Classifier() throws IOException {
+        CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
         standardizeFilter = buildStandardizeFilter();
         attributeSelectionFilter = createAttributeSelectionFilter();
         ibkClassifier = createIbkClassifier();
@@ -161,7 +162,7 @@ public class Classifier {
             saver.setInstances(voices_smoted);
             saver.setFile(new File(Utils.REGISTERED_DATASET_PATH));
             saver.writeBatch();
-            CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
+            //CSVManager.mergeCSV(Utils.REGISTERED_DATASET_PATH, Config.getInstance().getDatasetPath());
             Classifier.getClassifierInstance(true);
         } catch (Exception e) {
             e.printStackTrace();
