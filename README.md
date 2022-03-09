@@ -10,7 +10,7 @@ In order to recognize the user's voice the application automatically extract aud
 
 [Here](requirements.pdf) are present the requirements of the project.
 
-The complete documentation is available [here1](documentation.pdf); there is also a presentation of the project [here2](documentation.pdf).
+The complete documentation is available [here1](documentation.pdf); there is also a presentation of the project [here2](presentation.pdf).
 
 (Repository for data mining and machine learning's project)
 
